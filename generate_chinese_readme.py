@@ -413,6 +413,16 @@ SKILLS_CHINESE_INFO = {
         "desc": "作为 FAL 平台的通用万能接口，在需要调用其他未预设的 FAL 前沿音视频或图像模型时提供即时调用通道。"
     },
 
+    "pptx": {
+        "title": "PowerPoint 演示文稿全能处理专家 (PPTX)",
+        "category": "📄 办公文档与演示文稿 (Office & Documents)",
+        "desc": "Anthropic 官方出品。全功能处理 .pptx 与 .potx 幻灯片：支持从零创建高颜值演讲 PPT、Pitch Deck，解析提取幻灯片文本，深度修改已有 PPT 内容版式，合并/拆分页面，以及处理母版、版式布局、演讲者备注与批注。"
+    },
+    "docx": {
+        "title": "Word 专业文档与排版生成专家 (DOCX)",
+        "category": "📄 办公文档与演示文稿 (Office & Documents)",
+        "desc": "Anthropic 官方出品。全功能读写与精细化编辑 .docx 与 .dotx Word 文档：生成带专业多级目录、页眉页脚、统一标题规范与表格样式的正式报告、公文、备忘录与合同，支持高保真内容提取与修订跟踪。"
+    },
     # 7. 写作、逆向与综合辅助
     "writing-fragments": {
         "title": "发散性写作素材与灵感碎片收集器",

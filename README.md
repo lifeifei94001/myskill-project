@@ -1,11 +1,11 @@
 # 个人用技能库集合 (myskill-project)
 
 > **个人专属 Agent 技能库备份与跨设备同步中心**  
-> 本项目集中归档了本地使用的全部 **94 个 Agent Skills**。  
+> 本项目集中归档了本地使用的全部 **96 个 Agent Skills**。  
 > 无论是日常开发中的自动备份，还是换电脑时的一键恢复，都能确保 Antigravity、Claude Code、Cursor、Codex 等 AI 编程助手拥有完全一致的专家级能力。
 
-- **技能总数**：`94` 个技能
-- **最后更新时间**：`2026-11-03 10:29:49`
+- **技能总数**：`96` 个技能
+- **最后更新时间**：`2026-11-03 10:37:12`
 - **代码仓库**：[lifeifei94001/myskill-project](https://github.com/lifeifei94001/myskill-project)
 
 ---
@@ -169,16 +169,23 @@ npx skills add lifeifei94001/myskill-project --skill data-code-expert -g -y
 | 84 | **微信小程序全栈专家**<br/>`wechat-miniprogram-expert` | [wechat-miniprogram-expert](./skills/wechat-miniprogram-expert) | 覆盖原生微信小程序从 0 到 1 开发。支持微信云开发（CloudBase）与本地 Storage 模拟双模自适应适配、微信 OAuth 登录、并发高危业务原子防超卖事务设计、100% 纯 SVG 矢量 UI（严禁 Emoji）与合规发布交付 SOP。 |
 | 85 | **芋道源码 + Vben 5 企业级中后台构建专家**<br/>`yudao-vben-admin-builder` | [yudao-vben-admin-builder](./skills/yudao-vben-admin-builder) | 专注于基于 Yudao（ruoyi-vue-pro / yudao-boot-mini）Java 企业级架构与 Vben 5 / Vue3 Element Plus 前端进行企业 SaaS、多租户中后台、复杂 RBAC 与 BPM 工作流的设计、代码生成与扩展定制。 |
 
+### 📄 办公文档与演示文稿 (Office & Documents) (共 2 个)
+
+| # | 技能名称 | 目录链接 | 核心作用与能力详解 |
+|---|---|---|---|
+| 86 | **Word 专业文档与排版生成专家 (DOCX)**<br/>`docx` | [docx](./skills/docx) | Anthropic 官方出品。全功能读写与精细化编辑 .docx 与 .dotx Word 文档：生成带专业多级目录、页眉页脚、统一标题规范与表格样式的正式报告、公文、备忘录与合同，支持高保真内容提取与修订跟踪。 |
+| 87 | **PowerPoint 演示文稿全能处理专家 (PPTX)**<br/>`pptx` | [pptx](./skills/pptx) | Anthropic 官方出品。全功能处理 .pptx 与 .potx 幻灯片：支持从零创建高颜值演讲 PPT、Pitch Deck，解析提取幻灯片文本，深度修改已有 PPT 内容版式，合并/拆分页面，以及处理母版、版式布局、演讲者备注与批注。 |
+
 ### 🎨 3D 资产与多媒体创作 (共 9 个)
 
 | # | 技能名称 | 目录链接 | 核心作用与能力详解 |
 |---|---|---|---|
-| 86 | **原子级单体 3D 网格模型提取生成**<br/>`image-blast-3d` | [image-blast-3d](./skills/image-blast-3d) | 根据指定的单个物体名称或裁剪图像，精准生成独立的原子级 3D 几何模型与网格贴图。 |
-| 87 | **基于 FAL 模型的精准图片局部重绘与编辑**<br/>`image-blast-image-edit` | [image-blast-image-edit](./skills/image-blast-image-edit) | 提供高精度局部擦除、局部重绘、修图与画面扩展等底层 FAL 驱动能力。 |
-| 88 | **3D 背景清洁底板生成 (Clean Plate)**<br/>`image-blast-plate` | [image-blast-plate](./skills/image-blast-plate) | 在确认前景物体后，自动将前景人或物抹除并智能修补背景，为构建纯净 3D 空间提供无遮挡底板图。 |
-| 89 | **Image-Blast 3D 世界工程信封管理器**<br/>`image-blast-project` | [image-blast-project](./skills/image-blast-project) | 管理 `worlds/<slug>` 目录下的项目生命周期，统一组织输入原图、生成的 3D 模型、音效与全景配置文件。 |
-| 90 | **3D 空间环境音效与物体音效生成**<br/>`image-blast-sfx` | [image-blast-sfx](./skills/image-blast-sfx) | 根据 3D 场景描述或物体碰撞属性，生成逼真的空间环境环绕音、材质撞击音与交互音效。 |
-| 91 | **核心图像多维度深度剖析与 3D 要素拆解**<br/>`image-blast-uncover` | [image-blast-uncover](./skills/image-blast-uncover) | 主控分析技能：拆解图像中的前景对象、环境底色、光影朝向与场景层级，决定后续切片与 3D 生成策略。 |
-| 92 | **FAL 多模态模型任意通配调用通道**<br/>`image-blast-wildcard` | [image-blast-wildcard](./skills/image-blast-wildcard) | 作为 FAL 平台的通用万能接口，在需要调用其他未预设的 FAL 前沿音视频或图像模型时提供即时调用通道。 |
-| 93 | **3D 全景空间与静态环境生成**<br/>`image-blast-world` | [image-blast-world](./skills/image-blast-world) | 将单张原始输入图或干净底板图转化为 3D 静态高精度全景空间环境资产（GLB / SPZ 格式）。 |
-| 94 | **单图生成 3D 沉浸式世界与立体网格全能引擎**<br/>`image-blaster` | [image-blaster](./skills/image-blaster) | 仅需一张图片，依托 FAL 与 World Labs 模型生成完整 3D 环境空间、立体道具网格（Meshes）以及空间物理拟声音效。 |
+| 88 | **原子级单体 3D 网格模型提取生成**<br/>`image-blast-3d` | [image-blast-3d](./skills/image-blast-3d) | 根据指定的单个物体名称或裁剪图像，精准生成独立的原子级 3D 几何模型与网格贴图。 |
+| 89 | **基于 FAL 模型的精准图片局部重绘与编辑**<br/>`image-blast-image-edit` | [image-blast-image-edit](./skills/image-blast-image-edit) | 提供高精度局部擦除、局部重绘、修图与画面扩展等底层 FAL 驱动能力。 |
+| 90 | **3D 背景清洁底板生成 (Clean Plate)**<br/>`image-blast-plate` | [image-blast-plate](./skills/image-blast-plate) | 在确认前景物体后，自动将前景人或物抹除并智能修补背景，为构建纯净 3D 空间提供无遮挡底板图。 |
+| 91 | **Image-Blast 3D 世界工程信封管理器**<br/>`image-blast-project` | [image-blast-project](./skills/image-blast-project) | 管理 `worlds/<slug>` 目录下的项目生命周期，统一组织输入原图、生成的 3D 模型、音效与全景配置文件。 |
+| 92 | **3D 空间环境音效与物体音效生成**<br/>`image-blast-sfx` | [image-blast-sfx](./skills/image-blast-sfx) | 根据 3D 场景描述或物体碰撞属性，生成逼真的空间环境环绕音、材质撞击音与交互音效。 |
+| 93 | **核心图像多维度深度剖析与 3D 要素拆解**<br/>`image-blast-uncover` | [image-blast-uncover](./skills/image-blast-uncover) | 主控分析技能：拆解图像中的前景对象、环境底色、光影朝向与场景层级，决定后续切片与 3D 生成策略。 |
+| 94 | **FAL 多模态模型任意通配调用通道**<br/>`image-blast-wildcard` | [image-blast-wildcard](./skills/image-blast-wildcard) | 作为 FAL 平台的通用万能接口，在需要调用其他未预设的 FAL 前沿音视频或图像模型时提供即时调用通道。 |
+| 95 | **3D 全景空间与静态环境生成**<br/>`image-blast-world` | [image-blast-world](./skills/image-blast-world) | 将单张原始输入图或干净底板图转化为 3D 静态高精度全景空间环境资产（GLB / SPZ 格式）。 |
+| 96 | **单图生成 3D 沉浸式世界与立体网格全能引擎**<br/>`image-blaster` | [image-blaster](./skills/image-blaster) | 仅需一张图片，依托 FAL 与 World Labs 模型生成完整 3D 环境空间、立体道具网格（Meshes）以及空间物理拟声音效。 |
