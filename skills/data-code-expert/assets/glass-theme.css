@@ -1,0 +1,480 @@
+/* ==========================================================================
+   glass-theme.css — 获奖级三主题视觉系统（🌌 星云毛玻璃 / 🌸 霞光毛玻璃 / 🏛️ 先锋杂志风）
+   配合 Vue 3 + Element Plus 2.x 使用
+   用法：原样复制到 <前端目录>/src/styles/glass.css，在 main.ts 最后一行引入：
+     import "element-plus/dist/index.css";
+     import "element-plus/theme-chalk/dark/css-vars.css";
+     import "./styles/glass.css"; // 必须放最后，彻底覆盖 Element Plus 默认白底
+   主题切换：
+     - 🌌 星云毛玻璃（深色默认）：<html class="dark" data-glass-theme="nebula">
+     - 🌸 霞光毛玻璃（浅色暖霞）：<html data-glass-theme="aurora">
+     - 🏛️ 先锋杂志风（瑞士网格）：<html class="editorial no-glass" data-glass-theme="editorial">
+     - 性能逃生口（关闭模糊滤镜）：<html class="no-glass">
+   ========================================================================== */
+
+/* ---------- 1. 🌸 霞光毛玻璃（Aurora Sunset-Violet，浅色令牌） ---------- */
+:root,
+html[data-glass-theme="aurora"] {
+  --glass-blur: 18px;
+  --glass-saturate: 175%;
+
+  --glass-bg: rgba(255, 246, 250, 0.72);
+  --glass-bg-strong: rgba(255, 252, 254, 0.86);
+  --glass-bg-input: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.78);
+  --glass-border-hover: rgba(99, 102, 241, 0.45);
+  --glass-shadow: 0 10px 34px -4px rgba(31, 38, 135, 0.12);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --glass-radius: 16px;
+  --glass-radius-sm: 10px;
+
+  --glass-text: #0f172a;
+  --glass-text-secondary: #334155;
+  --glass-text-muted: #64748b;
+  --glass-accent: #6366f1;
+  --glass-accent-2: #8b5cf6;
+  --glass-spotlight-color: rgba(99, 102, 241, 0.14);
+
+  --bg-base-1: #fce7f3;
+  --bg-base-2: #e0e7ff;
+  --bg-orb-1: rgba(244, 114, 182, 0.36);
+  --bg-orb-2: rgba(129, 140, 248, 0.38);
+  --bg-orb-3: rgba(56, 189, 248, 0.28);
+
+  --font-sans: "Inter", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+
+/* ---------- 2. 🌌 星云毛玻璃（Nebula Dark，深色默认令牌） ---------- */
+html.dark,
+html[data-glass-theme="nebula"] {
+  --glass-bg: rgba(17, 23, 46, 0.72);
+  --glass-bg-strong: rgba(13, 18, 38, 0.84);
+  --glass-bg-input: rgba(15, 23, 42, 0.76);
+  --glass-border: rgba(148, 163, 184, 0.16);
+  --glass-border-hover: rgba(129, 140, 248, 0.52);
+  --glass-shadow: 0 14px 40px -6px rgba(2, 6, 23, 0.62);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  --glass-text: #f8fafc;
+  --glass-text-secondary: #cbd5e1;
+  --glass-text-muted: #94a3b8;
+  --glass-accent: #6366f1;
+  --glass-accent-2: #8b5cf6;
+  --glass-spotlight-color: rgba(139, 92, 246, 0.18);
+
+  --bg-base-1: #080b18;
+  --bg-base-2: #0d1226;
+  --bg-orb-1: rgba(14, 165, 233, 0.18);
+  --bg-orb-2: rgba(139, 92, 246, 0.22);
+  --bg-orb-3: rgba(225, 29, 72, 0.14);
+}
+
+/* ---------- 3. 🏛️ 先锋杂志风（Avant-Garde Editorial，瑞士网格高对比令牌） ---------- */
+html.editorial,
+html[data-glass-theme="editorial"] {
+  --glass-blur: 0px;
+  --glass-saturate: 100%;
+
+  --glass-bg: #ffffff;
+  --glass-bg-strong: #ffffff;
+  --glass-bg-input: #f4f4f0;
+  --glass-border: rgba(24, 24, 27, 0.14);
+  --glass-border-hover: #18181b;
+  --glass-shadow: 4px 4px 0px rgba(24, 24, 27, 0.08);
+  --glass-highlight: none;
+  --glass-radius: 6px;
+  --glass-radius-sm: 4px;
+
+  --glass-text: #09090b;
+  --glass-text-secondary: #27272a;
+  --glass-text-muted: #71717a;
+  --glass-accent: #18181b;
+  --glass-accent-2: #3f3f46;
+  --glass-spotlight-color: rgba(24, 24, 27, 0.05);
+
+  --bg-base-1: #f7f6f2;
+  --bg-base-2: #efede6;
+  --bg-orb-1: transparent;
+  --bg-orb-2: transparent;
+  --bg-orb-3: transparent;
+}
+
+/* ---------- 4. 全局基底、流体排版与背景光晕（静态零 GPU 负担） ---------- */
+html,
+body,
+#app {
+  min-height: 100%;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  color: var(--glass-text);
+  background: linear-gradient(135deg, var(--bg-base-1) 0%, var(--bg-base-2) 100%);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(42vmax 42vmax at 16% 84%, var(--bg-orb-1), transparent 68%),
+    radial-gradient(38vmax 38vmax at 84% 16%, var(--bg-orb-2), transparent 68%),
+    radial-gradient(40vmax 40vmax at 76% 86%, var(--bg-orb-3), transparent 70%);
+}
+
+/* 数字等宽对齐工具类（金额、库存、百分比、KPI 必加） */
+.num-tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- 5. Bento 便当盒响应式网格与玻璃容器 ---------- */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.glass,
+.glass-strong,
+.glass-panel {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+}
+
+/* 鼠标跟随聚光灯微交互卡片（配合 @mousemove 设置 --spot-x / --spot-y） */
+.glass-spotlight {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  background: radial-gradient(
+    320px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    var(--glass-spotlight-color),
+    transparent 70%
+  );
+}
+
+.glass-spotlight:hover {
+  transform: translateY(-2px);
+  border-color: var(--glass-border-hover);
+}
+
+.glass-spotlight:hover::after {
+  opacity: 1;
+}
+
+.glass-muted {
+  color: var(--glass-text-muted);
+}
+
+/* ---------- 6. 半透宝石色状态胶囊（Gemstone Status Pills） ---------- */
+.gem-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  border: 1px solid transparent;
+}
+
+.pill-emerald {
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.32);
+}
+:root:not(.dark) .pill-emerald { color: #047857; }
+
+.pill-sky {
+  background: rgba(14, 165, 233, 0.16);
+  color: #38bdf8;
+  border-color: rgba(14, 165, 233, 0.32);
+}
+:root:not(.dark) .pill-sky { color: #0369a1; }
+
+.pill-gold {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.32);
+}
+:root:not(.dark) .pill-gold { color: #b45309; }
+
+.pill-violet {
+  background: rgba(139, 92, 246, 0.18);
+  color: #c4b5fd;
+  border-color: rgba(139, 92, 246, 0.35);
+}
+:root:not(.dark) .pill-violet { color: #5b21b6; }
+
+.pill-coral {
+  background: rgba(244, 63, 94, 0.16);
+  color: #fb7185;
+  border-color: rgba(244, 63, 94, 0.32);
+}
+:root:not(.dark) .pill-coral { color: #be123c; }
+
+/* ---------- 7. Element Plus 全组件深度穿透覆写（严禁深色毛玻璃夹杂刺眼白块） ---------- */
+:root,
+html.dark,
+html.editorial {
+  --el-color-primary: var(--glass-accent);
+  --el-text-color-primary: var(--glass-text);
+  --el-text-color-regular: var(--glass-text-secondary);
+  --el-text-color-secondary: var(--glass-text-muted);
+  --el-border-radius-base: var(--glass-radius-sm);
+  --el-border-radius-small: 8px;
+
+  --el-bg-color: transparent;
+  --el-bg-color-page: transparent;
+  --el-bg-color-overlay: var(--glass-bg-strong);
+  --el-fill-color-blank: var(--glass-bg-input);
+  --el-fill-color-light: rgba(99, 102, 241, 0.08);
+  --el-border-color: var(--glass-border);
+  --el-border-color-light: var(--glass-border);
+  --el-border-color-lighter: var(--glass-border);
+
+  --el-card-bg-color: var(--glass-bg);
+  --el-dialog-bg-color: var(--glass-bg-strong);
+  --el-menu-bg-color: transparent;
+  --el-mask-color: rgba(8, 11, 24, 0.52);
+}
+
+/* 容器层统一模糊（只一层，不嵌套） */
+.el-card,
+.el-dialog,
+.el-drawer,
+.el-select__popper.el-popper,
+.el-dropdown__popper.el-popper,
+.el-picker__popper.el-popper,
+.el-popover.el-popper {
+  background: var(--glass-bg-strong) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+  box-shadow: var(--glass-shadow), var(--glass-highlight) !important;
+  color: var(--glass-text) !important;
+}
+
+.el-card__header {
+  border-bottom: 1px solid var(--glass-border) !important;
+}
+
+/* 表格全透明穿透（模糊在表格外层 .glass-strong 容器上完成，保障 60fps 滚动） */
+.el-table,
+.el-table__expanded-cell {
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: rgba(99, 102, 241, 0.1);
+  --el-table-row-hover-bg-color: rgba(99, 102, 241, 0.14);
+  --el-table-border-color: var(--glass-border);
+  --el-table-text-color: var(--glass-text);
+  --el-table-header-text-color: var(--glass-text);
+  background-color: transparent !important;
+  color: var(--glass-text) !important;
+}
+
+.el-table th.el-table__cell,
+.el-table tr,
+.el-table td.el-table__cell,
+.el-table__body-wrapper,
+.el-table__header-wrapper,
+.el-table__inner-wrapper::before {
+  background-color: transparent !important;
+  color: var(--glass-text) !important;
+  border-color: var(--glass-border) !important;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background-color: rgba(148, 163, 184, 0.06) !important;
+}
+
+/* 输入框、选择器、文本域统一绑定玻璃令牌，彻底杜绝默认白底 */
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  background-color: var(--glass-bg-input) !important;
+  box-shadow: 0 0 0 1px var(--glass-border) inset !important;
+  color: var(--glass-text) !important;
+  border-radius: var(--glass-radius-sm) !important;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.el-input__inner,
+.el-textarea__inner {
+  color: var(--glass-text) !important;
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused,
+.el-textarea__inner:focus {
+  box-shadow: 0 0 0 1px var(--glass-accent) inset, 0 0 0 4px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* 主按钮与导航胶囊：电光紫蓝渐变 + 弥散发光阴影 */
+.el-button--primary:not(.is-plain):not(.is-link):not(.is-text),
+.active-pill {
+  --el-button-bg-color: transparent;
+  background: linear-gradient(135deg, var(--glass-accent) 0%, var(--glass-accent-2) 100%) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 6px 20px -3px rgba(99, 102, 241, 0.45);
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+}
+
+.el-button--primary:not(.is-plain):not(.is-link):not(.is-text):hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.el-menu {
+  border-right: none !important;
+  background: transparent !important;
+}
+
+.el-menu-item {
+  color: var(--glass-text-secondary) !important;
+  border-radius: var(--glass-radius-sm);
+  margin: 4px 0;
+}
+
+.el-menu-item.is-active {
+  background: linear-gradient(135deg, var(--glass-accent) 0%, var(--glass-accent-2) 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 6px 20px -3px rgba(99, 102, 241, 0.42);
+}
+
+.el-menu-item:not(.is-active):hover {
+  background: rgba(99, 102, 241, 0.12) !important;
+}
+
+/* 分页器与空状态去白底 */
+.el-pagination button,
+.el-pager li {
+  background: var(--glass-bg-input) !important;
+  color: var(--glass-text-secondary) !important;
+  border-radius: 8px !important;
+}
+
+.el-pagination.is-background .el-pager li:not(.is-disabled).is-active {
+  background: linear-gradient(135deg, var(--glass-accent), var(--glass-accent-2)) !important;
+  color: #ffffff !important;
+}
+
+/* 细滚动条 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.38) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.38);
+  border-radius: 8px;
+}
+
+/* ---------- 8. 自动降级与手动逃生口（@supports / html.no-glass / 无障碍 / 打印） ---------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass-bg: rgba(255, 250, 252, 0.94);
+    --glass-bg-strong: rgba(255, 255, 255, 0.98);
+  }
+  html.dark {
+    --glass-bg: rgba(17, 23, 46, 0.94);
+    --glass-bg-strong: rgba(13, 18, 38, 0.98);
+  }
+}
+
+html.no-glass .glass,
+html.no-glass .glass-strong,
+html.no-glass .glass-panel,
+html.no-glass .el-card,
+html.no-glass .el-dialog,
+html.no-glass .el-drawer,
+html.no-glass .el-select__popper.el-popper,
+html.no-glass .el-dropdown__popper.el-popper,
+html.no-glass .el-picker__popper.el-popper,
+html.no-glass .el-popover.el-popper {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: var(--glass-bg-strong) !important;
+}
+
+html.no-glass body::before {
+  display: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-strong,
+  .glass-panel,
+  .el-card,
+  .el-dialog,
+  .el-drawer {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  body::before {
+    display: none !important;
+  }
+  .glass,
+  .glass-strong,
+  .glass-panel,
+  .el-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: 1px solid #d4d4d8 !important;
+  }
+}
