@@ -1,11 +1,11 @@
 # 个人用技能库集合 (myskill-project)
 
 > **个人专属 Agent 技能库备份与跨设备同步中心**  
-> 本项目集中归档了本地使用的全部 **73 个 Agent Skills**。  
+> 本项目集中归档了本地使用的全部 **74 个 Agent Skills**。  
 > 无论是日常开发中的自动备份，还是换电脑时的一键恢复，都能确保 Antigravity、Claude Code、Cursor、Codex 等 AI 编程助手拥有完全一致的专家级能力。
 
-- **技能总数**：`73` 个技能
-- **最后更新时间**：`2026-11-03 10:42:12`
+- **技能总数**：`74` 个技能
+- **最后更新时间**：`2026-11-03 14:14:21`
 - **代码仓库**：[lifeifei94001/myskill-project](https://github.com/lifeifei94001/myskill-project)
 
 ---
@@ -143,26 +143,27 @@ npx skills add lifeifei94001/myskill-project --skill data-code-expert -g -y
 | 63 | **Git Worktrees 独立工作区安全隔离流**<br/>`using-git-worktrees` | [using-git-worktrees](./skills/using-git-worktrees) | 在启动多分支并行开发或实施大改动前，自动使用 Git Worktree 检出独立工作区，避免修改正在运行的当前工作目录或污染现有代码现场。 |
 | 64 | **交付前证据验证门禁 (Evidence Before Assertions)**<br/>`verification-before-completion` | [verification-before-completion](./skills/verification-before-completion) | 铁律闸门：在声明任务完成、代码修复或全部通过前，必须在终端中实际运行验证命令（测试、构建、Lint），并依据命令的真实输出作为证据，严禁在未见证据前做出主观承诺。 |
 
-### 🌟 全栈开发与 Web 工作台 (共 6 个)
+### 🌟 全栈开发与 Web 工作台 (共 7 个)
 
 | # | 技能名称 | 目录链接 | 核心作用与能力详解 |
 |---|---|---|---|
 | 65 | **高性能数据处理与获奖级全栈工作台代码专家**<br/>`data-code-expert` | [data-code-expert](./skills/data-code-expert) | 覆盖四种交付形态：①一次性极速数据清洗脚本（Polars+FastExcel+xlsxwriter）；②CustomTkinter 原生桌面小工具（带 WPS/Excel 容错解耦）；③Vue3 + FastAPI + Turso + Cloudflare R2 生产级前后端 Web 工作台（严守《九条云端避坑铁律》与 Awwwards 七维视觉微交互自检）；④开源优先系统调研落地。 |
 | 66 | **Vercel 自动化部署与平台交付官**<br/>`deploy-to-vercel` | [deploy-to-vercel](./skills/deploy-to-vercel) | 与 data-code-expert 构成黄金搭档。专职负责项目的云端交付：自动探测 Git 远端与本地凭证、智能绑定团队 Scope、安全触发 Git Push 或 CLI 预览部署，并实时拉取回传线上可直接访问的 Preview / Production 官方链接。 |
-| 67 | **若依后端 + Shadcn Admin 前端全栈脚手架**<br/>`ruoyi-shadcn-fullstack` | [ruoyi-shadcn-fullstack](./skills/ruoyi-shadcn-fullstack) | 将经典的若依 Java 后端企业级标准（Spring Boot、MyBatis-Plus、MySQL、Redis、JWT/RBAC）与现代化 Shadcn Admin 前端标准（Vite、React 19、TypeScript、Tailwind CSS v4、TanStack Router & Table）无缝融合，生成高颜值全栈管理系统。 |
-| 68 | **Shadcn Admin 现代化后台管理系统构建专家**<br/>`shadcn-admin` | [shadcn-admin](./skills/shadcn-admin) | 专用于基于 shadcn-admin 模板脚手架搭建企业级仪表盘与管理后台。基于 Vite + React + TypeScript + Tailwind CSS v4 + Shadcn UI + TanStack Router，具备极高质量的暗黑模式、权限路由与响应式布局。 |
-| 69 | **微信小程序全栈专家**<br/>`wechat-miniprogram-expert` | [wechat-miniprogram-expert](./skills/wechat-miniprogram-expert) | 覆盖原生微信小程序从 0 到 1 开发。支持微信云开发（CloudBase）与本地 Storage 模拟双模自适应适配、微信 OAuth 登录、并发高危业务原子防超卖事务设计、100% 纯 SVG 矢量 UI（严禁 Emoji）与合规发布交付 SOP。 |
-| 70 | **芋道源码 + Vben 5 企业级中后台构建专家**<br/>`yudao-vben-admin-builder` | [yudao-vben-admin-builder](./skills/yudao-vben-admin-builder) | 专注于基于 Yudao（ruoyi-vue-pro / yudao-boot-mini）Java 企业级架构与 Vben 5 / Vue3 Element Plus 前端进行企业 SaaS、多租户中后台、复杂 RBAC 与 BPM 工作流的设计、代码生成与扩展定制。 |
+| 67 | **二手笔记本回收参数收集与顿号格式化专家**<br/>`laptop-specs-collector` | [laptop-specs-collector](./skills/laptop-specs-collector) | 专为爱回收/转转类 3C 二手回收业务打造。根据笔记本机型名称，自动联网检索中关村在线 (ZOL)、京东及官方参数库，精准提取并清洗为四维顿号格式（发布时间、CPU、显卡、固态、机械硬盘），可直接一键复制到机型排列组合系统。 |
+| 68 | **若依后端 + Shadcn Admin 前端全栈脚手架**<br/>`ruoyi-shadcn-fullstack` | [ruoyi-shadcn-fullstack](./skills/ruoyi-shadcn-fullstack) | 将经典的若依 Java 后端企业级标准（Spring Boot、MyBatis-Plus、MySQL、Redis、JWT/RBAC）与现代化 Shadcn Admin 前端标准（Vite、React 19、TypeScript、Tailwind CSS v4、TanStack Router & Table）无缝融合，生成高颜值全栈管理系统。 |
+| 69 | **Shadcn Admin 现代化后台管理系统构建专家**<br/>`shadcn-admin` | [shadcn-admin](./skills/shadcn-admin) | 专用于基于 shadcn-admin 模板脚手架搭建企业级仪表盘与管理后台。基于 Vite + React + TypeScript + Tailwind CSS v4 + Shadcn UI + TanStack Router，具备极高质量的暗黑模式、权限路由与响应式布局。 |
+| 70 | **微信小程序全栈专家**<br/>`wechat-miniprogram-expert` | [wechat-miniprogram-expert](./skills/wechat-miniprogram-expert) | 覆盖原生微信小程序从 0 到 1 开发。支持微信云开发（CloudBase）与本地 Storage 模拟双模自适应适配、微信 OAuth 登录、并发高危业务原子防超卖事务设计、100% 纯 SVG 矢量 UI（严禁 Emoji）与合规发布交付 SOP。 |
+| 71 | **芋道源码 + Vben 5 企业级中后台构建专家**<br/>`yudao-vben-admin-builder` | [yudao-vben-admin-builder](./skills/yudao-vben-admin-builder) | 专注于基于 Yudao（ruoyi-vue-pro / yudao-boot-mini）Java 企业级架构与 Vben 5 / Vue3 Element Plus 前端进行企业 SaaS、多租户中后台、复杂 RBAC 与 BPM 工作流的设计、代码生成与扩展定制。 |
 
 ### 📄 办公文档与演示文稿 (Office & Documents) (共 2 个)
 
 | # | 技能名称 | 目录链接 | 核心作用与能力详解 |
 |---|---|---|---|
-| 71 | **Word 专业文档与排版生成专家 (DOCX)**<br/>`docx` | [docx](./skills/docx) | Anthropic 官方出品。全功能读写与精细化编辑 .docx 与 .dotx Word 文档：生成带专业多级目录、页眉页脚、统一标题规范与表格样式的正式报告、公文、备忘录与合同，支持高保真内容提取与修订跟踪。 |
-| 72 | **PowerPoint 演示文稿全能处理专家 (PPTX)**<br/>`pptx` | [pptx](./skills/pptx) | Anthropic 官方出品。全功能处理 .pptx 与 .potx 幻灯片：支持从零创建高颜值演讲 PPT、Pitch Deck，解析提取幻灯片文本，深度修改已有 PPT 内容版式，合并/拆分页面，以及处理母版、版式布局、演讲者备注与批注。 |
+| 72 | **Word 专业文档与排版生成专家 (DOCX)**<br/>`docx` | [docx](./skills/docx) | Anthropic 官方出品。全功能读写与精细化编辑 .docx 与 .dotx Word 文档：生成带专业多级目录、页眉页脚、统一标题规范与表格样式的正式报告、公文、备忘录与合同，支持高保真内容提取与修订跟踪。 |
+| 73 | **PowerPoint 演示文稿全能处理专家 (PPTX)**<br/>`pptx` | [pptx](./skills/pptx) | Anthropic 官方出品。全功能处理 .pptx 与 .potx 幻灯片：支持从零创建高颜值演讲 PPT、Pitch Deck，解析提取幻灯片文本，深度修改已有 PPT 内容版式，合并/拆分页面，以及处理母版、版式布局、演讲者备注与批注。 |
 
 ### 🎨 3D 资产与多媒体创作 (共 1 个)
 
 | # | 技能名称 | 目录链接 | 核心作用与能力详解 |
 |---|---|---|---|
-| 73 | **单图生成 3D 沉浸式世界与立体网格全能引擎**<br/>`image-blaster` | [image-blaster](./skills/image-blaster) | 仅需一张图片，依托 FAL 与 World Labs 模型生成完整 3D 环境空间、立体道具网格（Meshes）以及空间物理拟声音效。 |
+| 74 | **单图生成 3D 沉浸式世界与立体网格全能引擎**<br/>`image-blaster` | [image-blaster](./skills/image-blaster) | 仅需一张图片，依托 FAL 与 World Labs 模型生成完整 3D 环境空间、立体道具网格（Meshes）以及空间物理拟声音效。 |

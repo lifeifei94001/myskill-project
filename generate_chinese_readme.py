@@ -7,6 +7,11 @@ ROOT_DIR = Path(__file__).resolve().parent
 # Comprehensive, accurate Chinese explanations for every skill
 SKILLS_CHINESE_INFO = {
     # 1. 全栈开发与 Web 工作台
+    "laptop-specs-collector": {
+        "title": "二手笔记本回收参数收集与顿号格式化专家",
+        "category": "🌟 全栈开发与 Web 工作台",
+        "desc": "专为爱回收/转转类 3C 二手回收业务打造。根据笔记本机型名称，自动联网检索中关村在线 (ZOL)、京东及官方参数库，精准提取并清洗为四维顿号格式（发布时间、CPU、显卡、固态、机械硬盘），可直接一键复制到机型排列组合系统。"
+    },
     "data-code-expert": {
         "title": "高性能数据处理与获奖级全栈工作台代码专家",
         "category": "🌟 全栈开发与 Web 工作台",
