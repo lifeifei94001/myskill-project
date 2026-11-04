@@ -428,6 +428,16 @@ SKILLS_CHINESE_INFO = {
         "category": "📄 办公文档与演示文稿 (Office & Documents)",
         "desc": "Anthropic 官方出品。全功能读写与精细化编辑 .docx 与 .dotx Word 文档：生成带专业多级目录、页眉页脚、统一标题规范与表格样式的正式报告、公文、备忘录与合同，支持高保真内容提取与修订跟踪。"
     },
+    "xlsx": {
+        "title": "Excel 电子表格全能创建与公式编辑专家 (XLSX)",
+        "category": "📄 办公文档与演示文稿 (Office & Documents)",
+        "desc": "Anthropic 官方出品。全功能处理 .xlsx、.xlsm、.csv 电子表格：支持从零创建带动态公式与专业样式的财务分析表/数据报表、复杂公式语法校验与计算（含 LibreOffice 重算引擎）、大批量数据处理、条件格式与图表生成。"
+    },
+    "golden-photo-retouch": {
+        "title": "黄金修图大师组合 (Golden Photo Retouch)",
+        "category": "🎨 3D 资产与多媒体创作",
+        "desc": "影楼级三阶段黄金修图流水线：阶段1画质除瑕与五官修复（去噪/重建发丝瞳孔）➔ 阶段2语境编辑与美学重塑（路人消除/背景置换/复古胶片/港风/静奢棚拍）➔ 阶段3超分辨率无损放大。支持人像精修、调色美化与潮玩变身。"
+    },
     # 7. 写作、逆向与综合辅助
     "writing-fragments": {
         "title": "发散性写作素材与灵感碎片收集器",

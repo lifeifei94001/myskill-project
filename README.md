@@ -1,11 +1,11 @@
 # 个人用技能库集合 (myskill-project)
 
 > **个人专属 Agent 技能库备份与跨设备同步中心**  
-> 本项目集中归档了本地使用的全部 **74 个 Agent Skills**。  
+> 本项目集中归档了本地使用的全部 **76 个 Agent Skills**。  
 > 无论是日常开发中的自动备份，还是换电脑时的一键恢复，都能确保 Antigravity、Claude Code、Cursor、Codex 等 AI 编程助手拥有完全一致的专家级能力。
 
-- **技能总数**：`74` 个技能
-- **最后更新时间**：`2026-11-03 14:14:21`
+- **技能总数**：`76` 个技能
+- **最后更新时间**：`2026-11-04 15:59:02`
 - **代码仓库**：[lifeifei94001/myskill-project](https://github.com/lifeifei94001/myskill-project)
 
 ---
@@ -155,15 +155,17 @@ npx skills add lifeifei94001/myskill-project --skill data-code-expert -g -y
 | 70 | **微信小程序全栈专家**<br/>`wechat-miniprogram-expert` | [wechat-miniprogram-expert](./skills/wechat-miniprogram-expert) | 覆盖原生微信小程序从 0 到 1 开发。支持微信云开发（CloudBase）与本地 Storage 模拟双模自适应适配、微信 OAuth 登录、并发高危业务原子防超卖事务设计、100% 纯 SVG 矢量 UI（严禁 Emoji）与合规发布交付 SOP。 |
 | 71 | **芋道源码 + Vben 5 企业级中后台构建专家**<br/>`yudao-vben-admin-builder` | [yudao-vben-admin-builder](./skills/yudao-vben-admin-builder) | 专注于基于 Yudao（ruoyi-vue-pro / yudao-boot-mini）Java 企业级架构与 Vben 5 / Vue3 Element Plus 前端进行企业 SaaS、多租户中后台、复杂 RBAC 与 BPM 工作流的设计、代码生成与扩展定制。 |
 
-### 📄 办公文档与演示文稿 (Office & Documents) (共 2 个)
+### 📄 办公文档与演示文稿 (Office & Documents) (共 3 个)
 
 | # | 技能名称 | 目录链接 | 核心作用与能力详解 |
 |---|---|---|---|
 | 72 | **Word 专业文档与排版生成专家 (DOCX)**<br/>`docx` | [docx](./skills/docx) | Anthropic 官方出品。全功能读写与精细化编辑 .docx 与 .dotx Word 文档：生成带专业多级目录、页眉页脚、统一标题规范与表格样式的正式报告、公文、备忘录与合同，支持高保真内容提取与修订跟踪。 |
 | 73 | **PowerPoint 演示文稿全能处理专家 (PPTX)**<br/>`pptx` | [pptx](./skills/pptx) | Anthropic 官方出品。全功能处理 .pptx 与 .potx 幻灯片：支持从零创建高颜值演讲 PPT、Pitch Deck，解析提取幻灯片文本，深度修改已有 PPT 内容版式，合并/拆分页面，以及处理母版、版式布局、演讲者备注与批注。 |
+| 74 | **Excel 电子表格全能创建与公式编辑专家 (XLSX)**<br/>`xlsx` | [xlsx](./skills/xlsx) | Anthropic 官方出品。全功能处理 .xlsx、.xlsm、.csv 电子表格：支持从零创建带动态公式与专业样式的财务分析表/数据报表、复杂公式语法校验与计算（含 LibreOffice 重算引擎）、大批量数据处理、条件格式与图表生成。 |
 
-### 🎨 3D 资产与多媒体创作 (共 1 个)
+### 🎨 3D 资产与多媒体创作 (共 2 个)
 
 | # | 技能名称 | 目录链接 | 核心作用与能力详解 |
 |---|---|---|---|
-| 74 | **单图生成 3D 沉浸式世界与立体网格全能引擎**<br/>`image-blaster` | [image-blaster](./skills/image-blaster) | 仅需一张图片，依托 FAL 与 World Labs 模型生成完整 3D 环境空间、立体道具网格（Meshes）以及空间物理拟声音效。 |
+| 75 | **黄金修图大师组合 (Golden Photo Retouch)**<br/>`golden-photo-retouch` | [golden-photo-retouch](./skills/golden-photo-retouch) | 影楼级三阶段黄金修图流水线：阶段1画质除瑕与五官修复（去噪/重建发丝瞳孔）➔ 阶段2语境编辑与美学重塑（路人消除/背景置换/复古胶片/港风/静奢棚拍）➔ 阶段3超分辨率无损放大。支持人像精修、调色美化与潮玩变身。 |
+| 76 | **单图生成 3D 沉浸式世界与立体网格全能引擎**<br/>`image-blaster` | [image-blaster](./skills/image-blaster) | 仅需一张图片，依托 FAL 与 World Labs 模型生成完整 3D 环境空间、立体道具网格（Meshes）以及空间物理拟声音效。 |

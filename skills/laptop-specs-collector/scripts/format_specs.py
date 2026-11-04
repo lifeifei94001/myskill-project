@@ -3,117 +3,148 @@ import sys
 import json
 from typing import List, Dict, Any, Optional
 
-def normalize_cpu(cpu_str: str) -> str:
-    s = cpu_str.strip()
-    # Remove leading Intel / AMD / Core prefixes
-    s = re.sub(r'(?i)\bintel\b\s*', '', s)
-    s = re.sub(r'(?i)\bcore\b\s*', '', s)
-    s = re.sub(r'(?i)\bamd\b\s*', '', s)
-    s = re.sub(r'(?i)\bryzen\b\s*', '', s)
-    s = re.sub(r'(?i)^酷睿\s*', '', s)
-    s = re.sub(r'(?i)^锐龙\s*', 'R', s)
-    # i9 14900HX -> i9-14900HX
-    s = re.sub(r'(?i)\b(i[3579])\s*[-_]?\s*([0-9]{4,5}[A-Z]*)', r'\1-\2', s)
-    # R7 7840H -> R7-7840H
-    s = re.sub(r'(?i)\b(R[3579])\s*[-_]?\s*([0-9]{4}[A-Z]*)', r'\1-\2', s)
-    # Ultra 7 155H
-    s = re.sub(r'(?i)\bultra\b', 'Ultra', s)
-    return s.strip()
+def validate_date_ymd(date_str: str) -> bool:
+    """Validate that date strictly follows YYYY年MM月DD日 or YYYY/MM/DD format down to the exact day."""
+    if not date_str or date_str == '空':
+        return False
+    # Check YYYY年MM月DD日
+    if re.match(r'^\d{4}年\d{1,2}月\d{1,2}日$', date_str):
+        return True
+    # Check YYYY/MM/DD
+    if re.match(r'^\d{4}/\d{1,2}/\d{1,2}$', date_str):
+        return True
+    return False
 
-def normalize_gpu(gpu_str: str) -> str:
-    s = gpu_str.strip()
-    s = re.sub(r'(?i)\bnvidia\b\s*', '', s)
-    s = re.sub(r'(?i)\bgeforce\b\s*', '', s)
-    s = re.sub(r'(?i)\s*(laptop\s*gpu|移动版|笔记本电脑gpu|独立显卡|独显)', '', s)
-    s = re.sub(r'(?i)rtx\s*([0-9]{4}[a-z]*)', r'RTX\1', s)
-    s = re.sub(r'(?i)gtx\s*([0-9]{4}[a-z]*)', r'GTX\1', s)
-    if any(k in s.lower() for k in ['核显', '集显', '集成', 'intel iris', 'amd radeon graphics', 'uhd', '集成显卡']):
-        return '集显'
-    return s.strip()
+def format_real_sku_table(rows: List[Dict[str, Any]]) -> str:
+    """
+    Format official real SKUs into the 8-column fixed markdown table:
+    | 序号 | CPU | 运存（内存） | 显卡 | 固态硬盘（SSD） | 机械硬盘（HDD） | 屏幕尺寸 | 是否已下架 | 来源 |
+    """
+    headers = [
+        "| 序号 | CPU | 运存（内存） | 显卡 | 固态硬盘（SSD） | 机械硬盘（HDD） | 屏幕尺寸 | 是否已下架 | 来源 |",
+        "|:---:|:---|:---|:---|:---|:---|:---|:---:|:---|"
+    ]
+    lines = list(headers)
+    for idx, row in enumerate(rows, 1):
+        cpu = row.get("cpu", "空") or "空"
+        ram = row.get("ram", "空") or "空"
+        gpu = row.get("gpu", "空") or "空"
+        ssd = row.get("ssd", "空") or "空"
+        hdd = row.get("hdd", "空") or "空"
+        screen = row.get("screen", "空") or "空"
+        discontinued = row.get("is_discontinued", "否") or "否"
+        source = row.get("source", "官方商城") or "官方商城"
+        lines.append(f"| {idx} | {cpu} | {ram} | {gpu} | {ssd} | {hdd} | {screen} | {discontinued} | {source} |")
+    return "\n".join(lines)
 
-def normalize_storage(cap_str: str) -> str:
-    s = cap_str.strip().upper()
-    s = s.replace('GB', 'G').replace(' ', '')
-    if s == '1024G':
-        return '1TB'
-    if s == '2048G':
-        return '2TB'
-    return s
+def format_release_info_table(release_info: List[Dict[str, str]]) -> str:
+    """
+    Format release time table:
+    | 批次 | 发布日期 | 首销日期 | 版本差异说明 |
+    """
+    headers = [
+        "| 批次 | 发布日期 | 首销日期 | 版本差异说明 |",
+        "|:---|:---|:---|:---|"
+    ]
+    lines = list(headers)
+    for info in release_info:
+        batch = info.get("batch", "空") or "空"
+        pub = info.get("publish_date", "空") or "空"
+        sale = info.get("first_sale_date", "空") or "空"
+        diff = info.get("version_diff", "空") or "空"
+        lines.append(f"| {batch} | {pub} | {sale} | {diff} |")
+    return "\n".join(lines)
 
-def clean_and_join(items: List[str], normalizer=None) -> str:
-    cleaned = []
-    for item in items:
-        # Split only by comma, pause, semicolon, or newline (NOT spaces within CPU/GPU names)
-        tokens = re.split(r'[,，、;\n]+', str(item).strip())
-        for t in tokens:
-            t = t.strip()
-            if not t:
-                continue
-            if normalizer:
-                t = normalizer(t)
-            if t and t not in cleaned:
-                cleaned.append(t)
-    return '、'.join(cleaned)
-
-def format_laptop_record(
+def extract_dedup_attributes_from_skus(
     brand: str,
     alias: str,
     release_date: str,
-    cpus: List[str],
-    gpus: List[str],
-    ssds: List[str],
-    hdds: Optional[List[str]] = None
-) -> Dict[str, Any]:
-    cpu_str = clean_and_join(cpus, normalize_cpu)
-    gpu_str = clean_and_join(gpus, normalize_gpu)
-    ssd_str = clean_and_join(ssds, normalize_storage)
-    
-    if not hdds or hdds == ['无'] or hdds == ['none']:
-        hdd_str = '无'
-    else:
-        hdd_str = clean_and_join(hdds, normalize_storage)
-        if not hdd_str:
-            hdd_str = '无'
+    first_sale_date: str,
+    skus: List[Dict[str, Any]]
+) -> str:
+    """
+    Extract aggregated attributes strictly from the verified real SKUs without Cartesian hallucinations.
+    """
+    cpus, rams, gpus, ssds, hdds = [], [], [], [], []
+    for s in skus:
+        c = s.get("cpu", "").strip()
+        r = s.get("ram", "").strip()
+        g = s.get("gpu", "").strip()
+        sd = s.get("ssd", "").strip()
+        hd = s.get("hdd", "").strip()
+        if c and c != "空" and c not in cpus:
+            cpus.append(c)
+        if r and r != "空" and r not in rams:
+            rams.append(r)
+        if g and g != "空" and g not in gpus:
+            gpus.append(g)
+        if sd and sd != "空" and sd not in ssds:
+            ssds.append(sd)
+        if hd and hd != "空" and hd not in hdds:
+            hdds.append(hd)
+        elif not hd or hd == "空":
+            if "无" not in hdds:
+                hdds.append("无")
 
-    # Date normalization: 2024年1月 -> 2024/01/01
-    date_clean = release_date.strip().replace('年', '/').replace('月', '/').replace('日', '').replace('-', '/')
-    date_clean = re.sub(r'/+$', '', date_clean)
+    cpu_str = "、".join(cpus) if cpus else "空"
+    ram_str = "、".join(rams) if rams else "空"
+    gpu_str = "、".join(gpus) if gpus else "空"
+    ssd_str = "、".join(ssds) if ssds else "空"
+    hdd_str = "、".join(hdds) if hdds else "无"
 
-    # Compute combination count
-    c_count = len(cpu_str.split('、')) if cpu_str else 0
-    g_count = len(gpu_str.split('、')) if gpu_str else 0
-    s_count = len(ssd_str.split('、')) if ssd_str else 0
-    h_count = len(hdd_str.split('、')) if hdd_str else 0
-    combo_count = c_count * g_count * s_count * h_count
+    card = f"""════════════════════════════════════════════════════════════
+【品牌名称】：{brand}
+【机型别名】：{alias}
+【发布时间】：{release_date}（首销：{first_sale_date}）
+────────────────────────────────────────────────────────────
+【处理器 CPU】 (顿号分隔)：
+{cpu_str}
 
-    return {
-        "brand": brand,
-        "alias": alias,
-        "release_date": date_clean,
-        "cpu_raw": cpu_str,
-        "gpu_raw": gpu_str,
-        "ssd_raw": ssd_str,
-        "hdd_raw": hdd_str,
-        "combo_count": combo_count
-    }
+【运存内存】 (顿号分隔)：
+{ram_str}
+
+【显卡型号】 (顿号分隔)：
+{gpu_str}
+
+【固态硬盘】 (顿号分隔)：
+{ssd_str}
+
+【机械硬盘】 (顿号分隔)：
+{hdd_str}
+════════════════════════════════════════════════════════════
+📊 官方真实在售组合总数：{len(skus)} 种独立 SKU（严格基于真实在售组合，拒绝虚假笛卡尔积）"""
+    return card
 
 if __name__ == "__main__":
     # Test example
-    demo = format_laptop_record(
-        brand="联想",
-        alias="拯救者Y9000P 2024",
-        release_date="2024/01/17",
-        cpus=["Intel Core i9 14900HX", "i7-14650HX"],
-        gpus=["NVIDIA GeForce RTX 4060 Laptop", "RTX 4070"],
-        ssds=["1024GB", "2TB"],
-        hdds=["无"]
-    )
-    print("=== 规范化结果示范 ===")
-    print(f"品牌名称: {demo['brand']}")
-    print(f"别名:     {demo['alias']}")
-    print(f"发布时间: {demo['release_date']}")
-    print(f"CPU:      {demo['cpu_raw']}")
-    print(f"显卡:     {demo['gpu_raw']}")
-    print(f"固态硬盘: {demo['ssd_raw']}")
-    print(f"机械硬盘: {demo['hdd_raw']}")
-    print(f"理论SKU组合数: {demo['combo_count']} 种")
+    demo_skus = [
+        {
+            "cpu": "Intel Core Ultra 9 290HX Plus",
+            "ram": "32GB DDR5 6400MHz",
+            "gpu": "NVIDIA GeForce RTX 5070 12GB",
+            "ssd": "1TB",
+            "hdd": "空",
+            "screen": "空",
+            "is_discontinued": "否",
+            "source": "联想官方商城"
+        },
+        {
+            "cpu": "Intel Core Ultra 9 290HX Plus",
+            "ram": "32GB DDR5 6400MHz",
+            "gpu": "NVIDIA GeForce RTX 5080 16GB",
+            "ssd": "2TB",
+            "hdd": "空",
+            "screen": "空",
+            "is_discontinued": "否",
+            "source": "联想官方商城"
+        }
+    ]
+    print("=== 真实在售组合表格 ===")
+    print(format_real_sku_table(demo_skus))
+    print("\n=== 上市时间表格 ===")
+    demo_release = [
+        {"batch": "首发批次", "publish_date": "2026年05月19日", "first_sale_date": "2026年05月19日", "version_diff": "空"}
+    ]
+    print(format_release_info_table(demo_release))
+    print("\n=== 逆向聚合录入卡 ===")
+    print(extract_dedup_attributes_from_skus("联想", "拯救者 Y9000P 2026", "2026年05月19日", "2026年05月19日", demo_skus))
