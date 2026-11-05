@@ -553,6 +553,11 @@ SKILLS_CHINESE_INFO = {
         "title": "Matt Pocock 软件工厂自闭环流水线规范",
         "category": "🛠️ 软件工程与代码质量规范",
         "desc": "Matt Pocock 的高级工程流水线技能。将 AI 编码与 Git 平台、工单系统、测试运行器与可观测性平台深度结合，实现多 Agent 协同的端到端无人值守软件交付规范。"
+    },
+    "skill-navigator": {
+        "title": "全局技能与插件调度中枢 (Skill & Plugin Navigator)",
+        "category": "🤖 Agent 自我进化与管理",
+        "desc": "专为管理与编排本地全部 93+ 技能与 20 插件打造的调度中枢。在动手前向它描述任务，即可获得覆盖全生命周期的黄金技能配方、插件搭配策略与阶段执行顺序。"
     }
 }
 
