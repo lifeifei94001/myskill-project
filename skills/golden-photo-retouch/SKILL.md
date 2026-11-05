@@ -52,6 +52,21 @@ description: "Use when the user wants to retouch photos, edit portraits, enhance
 
 ### 阶段 2：语境编辑与美学重构 (Phase 2: Context Edit & Styling)
 * **核心目标**：解决“好看与氛围感问题”。
+* **核心红线：严禁“换头换人”与“凭空脑补虚拟脸”（Identity Locking & Zero-Hallucination Protocol）**：
+  P图（修图）的最底层红线是**必须是本人，人物改变不大**！严禁把真实人物P成AI模特或另一个人。
+  1. **面部非完整可见时严禁虚拟人脸（铁律：低头就保持原来低头）**：
+     若原图人物处于低头、侧颜、背影、发丝遮挡或面部未露出状态，**绝对严禁强行指令人物抬头或转正脸**，严禁让模型无中生有凭空捏造一张虚拟人脸！原图低头就保留原本低头姿态，仅对光影、氛围、发丝光泽、服饰质感和背景景深进行美化提升，人物本体保持最小变动（Minimal Subject Mutation）。
+     提示词强制锁定姿态：
+     `"Keep the subject's exact posture, downward gaze angle, head orientation, and natural silhouette from the reference photo. Do NOT fabricate, invent, or hallucinate an artificial front face. Preserve the original head tilt and pose with minimal alteration to the person."`
+  2. **整理乱发与露眼使用“减法修图”，严禁扩散重绘换脸（Subtractive Retouching Rule）**：
+     当用户提出“整理遮脸刘海/拨开碎发露出清澈眼睛”等诉求时，**绝对禁止**将该指令直接丢给通用扩散生成模型（如 Canva AI 生图或通用全图 img2img）！扩散模型在被遮挡处因缺失原始眼睛先验，必定从训练集随机脑补一张假脸。
+     **正确执行方案**：必须采用“局部像素减法（Inpainting/Patch-Match）”，仅剔除横跨眼鼻的杂乱发丝线条，搭配局部阴影提亮（Dodge & Burn 唤醒眼神光），**100% 沿用原图底层真实五官肌理**。
+  3. **动环境、不动真人隔离原则（Subject-Environment Decoupling）**：
+     风格迁移、丁达尔光线、Komorebi 树影斑驳、大光圈背景虚化只允许作用于环境、背景与整体光影，人物主体面容骨骼实施**像素级锁定（Pixel-Lock）**。
+  4. **显式身份锚定前置**：提示词开头必须强声明：
+     `"Photo retouch of the exact same person from reference image. Strict high-fidelity facial identity preservation: retain identical facial features, bone structure, eyes, nose, lips, jawline, and skin tone. Do not replace the subject with a different model or generic AI face; maintain 100% facial recognition and likeness."`
+  5. **特征锚点锁定（Anchor Features）**：明确锁定人物原生不可变特征（发型弧度、发箍、耳廓、特定痣/斑、原生眉形）。
+  6. **抑制过度磨皮假面**：提示词明确要求 `authentic skin texture with visible natural pores, unedited natural feel`，拒绝“千人一面网红脸”。
 * **自主美化提示词法则**：
   用户如果只说“弄好看点”，Agent **严禁**只输入 `"beautiful, nice"` 等空洞词汇，必须结合摄影三要素进行翻译增强：
   1. **光影（Lighting）**：`Rembrandt lighting, golden hour warm rim light, soft volumetric diffusion`
@@ -94,7 +109,7 @@ description: "Use when the user wants to retouch photos, edit portraits, enhance
 
 在将处理后的图片交付给用户前，必须从以下 7 个维度进行视觉自检闭环：
 
-1. **五官真实度**：是否保留了人物原有五官骨骼？是否避免了“橡皮人假面”过度磨皮？
+1. **五官真实度与姿态守恒**：是否保留了人物原有五官骨骼？若原片低头、侧颜或看不到脸，是否严格保持原有姿态，坚决杜绝凭空捏造虚拟正面脸？是否避免了“橡皮人假面”过度磨皮？
 2. **光影一致性**：若更换了背景或重绘局部，主体受光面与新背景主光源角度是否完全契合？
 3. **边缘融合度**：发丝、肩膀轮廓与背景交界处是否自然？有无白色切边或生硬羽化痕迹？
 4. **消除干净度**：若执行了杂物/路人抹除，抹除区域的纹理与透视是否平滑，有无鬼影或异常色块？

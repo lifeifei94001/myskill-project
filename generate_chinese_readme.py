@@ -513,6 +513,46 @@ SKILLS_CHINESE_INFO = {
         "title": "权威一手信源深度研究与调研报告",
         "category": "✍️ 写作、逆向与综合辅助",
         "desc": "针对开发者提出的技术难题，主动深挖权威一手信源（官方文档、源码、RFC 规范），并在本地生成结构化的调研 Markdown 报告。"
+    },
+    "agent-desktop": {
+        "title": "专为 AI Agent 优化的原生桌面 Computer Use CLI",
+        "category": "🌐 网络、搜索与外部工具",
+        "desc": "通过操作系统原生无障碍语义树（Accessibility Tree）直接观测与操作 macOS、Windows 和 Linux 原生桌面应用程序，支持点击、表单填写、快捷键、窗口调度与剪贴板。"
+    },
+    "agent-desktop-windows": {
+        "title": "Windows 原生 UI 自动化与应用操作指南",
+        "category": "🌐 网络、搜索与外部工具",
+        "desc": "专为 Windows 平台打造的 agent-desktop 深度指导。支持 Windows UI Automation 树解析、Chromium/Electron 应用（VS Code、Slack 等）调试、PowerShell 语法转义与权限管理。"
+    },
+    "moneyprinterturbo-video": {
+        "title": "MoneyPrinterTurbo 全自动 AI 短视频生成官",
+        "category": "🎨 3D 资产与多媒体创作",
+        "desc": "harry0703 开源的现象级 AI 短视频生成工具官方技能。只需提供主题或脚本，全自动串联文案生成、AI 配音、高清素材检索、字幕对齐并合成导出高清 MP4 短视频。"
+    },
+    "nvidia-ontology-management": {
+        "title": "NVIDIA Auto Ontology 语义图本体建模与发布",
+        "category": "🧠 需求澄清、推演与架构规划",
+        "desc": "NVIDIA 官方开源的语义图推理层管理技能。用于在 Auto Ontology 中定义和发布企业级业务指标、实体关系与受控术语，杜绝 Text-to-SQL 与 RAG 中对底层模式的盲目猜测。"
+    },
+    "nvidia-ontology-query": {
+        "title": "NVIDIA Auto Ontology 语义查询验证与问答",
+        "category": "🧠 需求澄清、推演与架构规划",
+        "desc": "对 Auto Ontology 语义推理层进行查询验证。自动校验生成的 SQL 约束、关联路径与数据度量计算逻辑，确保 Agent 获得高确定性、可解释的结构化查询结果。"
+    },
+    "nvidia-ontology-setup": {
+        "title": "NVIDIA Auto Ontology 运行时配置与 MCP 接入",
+        "category": "🛠️ 软件工程与代码质量规范",
+        "desc": "指导通过 Helm、Docker Compose 部署 NVIDIA Auto Ontology 运行时服务，并将语义层作为 MCP (Model Context Protocol) 工具安全接入 Agent 运行环境。"
+    },
+    "spec-kit": {
+        "title": "GitHub Spec Kit 规格驱动开发 (SDD) 工具包",
+        "category": "🧠 需求澄清、推演与架构规划",
+        "desc": "GitHub 官方推出的 Specification-Driven Development 流程框架。摆脱盲目编码，建立规范优先原则（Constitution → Specify → Clarify → Plan → Tasks → Implement），让 AI 编码严格按图索骥。"
+    },
+    "software-factory": {
+        "title": "Matt Pocock 软件工厂自闭环流水线规范",
+        "category": "🛠️ 软件工程与代码质量规范",
+        "desc": "Matt Pocock 的高级工程流水线技能。将 AI 编码与 Git 平台、工单系统、测试运行器与可观测性平台深度结合，实现多 Agent 协同的端到端无人值守软件交付规范。"
     }
 }
 
@@ -608,6 +648,34 @@ npx skills add lifeifei94001/myskill-project --skill data-code-expert -g -y
             folder_link = f"[{folder}](./skills/{folder})"
             content += f"| {counter} | **{title}**<br/>`{folder}` | {folder_link} | {clean_desc} |\n"
             counter += 1
+
+    content += """\n---\n\n## 已配置的官方生态与扩展插件 (Installed Plugins)\n\n除了上述自定义与社区 Agent Skills 之外，当前环境还深度集成了以下 **20 个官方生态插件**（含 MCP 服务与 Google Workspace 授权）：\n\n| # | 插件名称 | 领域分类 | 授权/部署状态 | 核心能力说明 |\n|---|---|---|---|---|\n"""
+
+    plugins_data = [
+        ("Google Calendar (`gcalendar`)", "Google Workspace", "🟢 已连接 (lifeifei94001@gmail.com)", "日程查询、会议创建、日历事件增删改查"),
+        ("Google Docs (`gdocs`)", "Google Workspace", "🟢 已连接 (lifeifei94001@gmail.com)", "Google 文档新建、内容提取、样式排版与团队协作"),
+        ("Google Drive (`gdrive`)", "Google Workspace", "🟢 已连接 (lifeifei94001@gmail.com)", "云端硬盘文件检索、上传、权限管理与分享链接生成"),
+        ("Google Sheets (`gsheets`)", "Google Workspace", "🟢 已连接 (lifeifei94001@gmail.com)", "电子表格多维数据读取、批量单元格写入与公式分析"),
+        ("Google Slides (`gslides`)", "Google Workspace", "🟢 已连接 (lifeifei94001@gmail.com)", "演示文稿大纲生成、幻灯片设计、排版与批量导出"),
+        ("Chrome DevTools (`chrome-devtools-plugin`)", "开发与调试", "🟢 本地已安装 (MCP)", "Chrome 原生无障碍调试、网络请求监控、性能火焰图与浏览器控制"),
+        ("Android CLI (`android-cli-plugin`)", "移动端开发", "🟢 本地已安装", "Android 原生开发套件、真机与模拟器控制、Compose 实时预览"),
+        ("CodeRabbit (`coderabbit`)", "工程与代码质量", "🟢 本地已安装", "PR 自动化审查、高危代码异味拦截与一键 Autofix 修复"),
+        ("Gemini API (`gemini-api`)", "AI 与大模型", "🟢 本地已安装", "Google Gemini 最新官方 API 文档检索与技术规范参考"),
+        ("Antigravity SDK (`google-antigravity-sdk`)", "AI 与大模型", "🟢 本地已安装", "Google Antigravity 智能体设计、自主编排与多 Agent 协同"),
+        ("Figma (`figma`)", "设计与创意", "🟢 本地已安装 (MCP)", "Figma 设计稿审查、Code Connect 代码映射、FigJam 交互设计"),
+        ("Canva (`canva`)", "设计与创意", "🟢 本地已安装 (MCP)", "Canva 品牌合规检查、批量制图生成与多平台社媒尺寸重排"),
+        ("Vercel Platform (`vercel-plugin`)", "云托管与平台", "🟡 本地已就绪 (待登录)", "Vercel 项目绑定、Functions/WAF/存储配置与 CI/CD 预览发布"),
+        ("Firebase (`firebase`)", "云托管与平台", "🟢 本地已安装", "Google Firebase 全栈云开发、Auth、Firestore、Hosting 与 App Hosting"),
+        ("Notion (`notion`)", "生产力与知识库", "🟢 本地已安装 (MCP)", "Notion 知识库管理、敏捷需求追踪、会议纪要与数据库视图构建"),
+        ("WordPress.com (`wordpress`)", "CMS 与内容发布", "🟢 本地已安装 (MCP)", "WordPress/Jetpack 博客站点管理、文章草稿、分类目录与页面发布"),
+        ("Auth0 (`auth0`)", "安全与身份鉴权", "🟢 本地已安装", "现代化身份验证、SSO 单点登录、JWT 校验与用户会话安全"),
+        ("PandaDoc (`pandadoc`)", "商务与合同流", "🟡 本地已就绪 (待登录)", "电子签署、报价单自动构建、销售协议与合同生命周期管理"),
+        ("Looker (`looker`)", "商业智能与数据", "🟢 本地已安装", "企业级 BI 报表查询、LookML 数据建模与仪表盘可视化"),
+        ("Browser Automation (`browse`)", "网络与搜索", "🟢 本地已安装", "通用网页访问、内容抓取与实时网络信息检索")
+    ]
+
+    for p_idx, (p_name, p_cat, p_status, p_desc) in enumerate(plugins_data, 1):
+        content += f"| {p_idx} | **{p_name}** | {p_cat} | {p_status} | {p_desc} |\n"
 
     readme_path = ROOT_DIR / "README.md"
     readme_path.write_text(content, encoding="utf-8")
