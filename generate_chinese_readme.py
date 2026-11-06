@@ -558,6 +558,11 @@ SKILLS_CHINESE_INFO = {
         "title": "全局技能与插件调度中枢 (Skill & Plugin Navigator)",
         "category": "🤖 Agent 自我进化与管理",
         "desc": "专为管理与编排本地全部 93+ 技能与 20 插件打造的调度中枢。在动手前向它描述任务，即可获得覆盖全生命周期的黄金技能配方、插件搭配策略与阶段执行顺序。"
+    },
+    "craft-anything": {
+        "title": "Craft Anything 软件工作原理逆向与净室复刻专家",
+        "category": "✍️ 写作、逆向与综合辅助",
+        "desc": "基于 Rust 开源净室引擎。通过 MCP 工具链深入分析任何已发布软件（二进制程序、Electron、Android APK、WebAssembly、固件等）的工作原理，指导 AI 编码 Agent 提取真实证据、规划步骤并复刻出自研版本。"
     }
 }
 
