@@ -1,0 +1,40 @@
+iPhone 17e	A3635	256G	国行	白色
+iPhone 17e	A3635	512G	国行	白色
+iPhone 16e	A3410	512G	国行	黑色
+iPhone 16e	A3410	256G	国行	黑色
+iPhone 16e	A3410	128G	国行	黑色
+iPhone 15 Pro	A3104	128G	国行	白色钛金属
+iPhone 15 Plus	A3096	512G	国行	粉色
+iPhone 15	A3092	512G	国行	粉色
+iPhone 14 Pro	A2892	512G	国行	暗紫色
+iPhone 14 Plus	A2888	512G	国行	午夜色
+iPhone 14	A2884	512G	国行	午夜色
+iPhone 13 Pro	A2639	512G	国行	石墨色
+iPhone 13	A2634	512G	国行	粉色
+iPhone 13 mini	A2629	512G	国行	粉色
+iPhone 12 mini	A2400	256G	国行	黑色
+iPhone SE 3	A2785	256G	国行	红色
+iPhone SE 3	A2785	128G	国行	红色
+iPhone SE 3	A2785	64G	国行	红色
+iPhone 6S Plus	其他型号	128G	国行	金色
+iPhone 6S Plus	其他型号	64G	国行	金色
+iPhone 6S Plus	其他型号	32G	国行	金色
+iPhone 6S Plus	其他型号	16G	国行	金色
+iPhone 6S	其他型号	128G	国行	金色
+iPhone 6S	其他型号	64G	国行	金色
+iPhone 6S	其他型号	32G	国行	金色
+iPhone 6S	其他型号	16G	国行	金色
+iPhone 7 Plus	A1661	256G	国行	金色
+iPhone 7	A1660	256G	国行	金色
+iPhone 8	A1863	128G	国行	红色
+iPhone 8 Plus	A1864	128G	国行	红色
+iPhone XS Max	A2104	512G	国行	金色
+iPhone XS	A2100	512G	国行	金色
+iPhone XR	A2108	256G	国行	白色
+iPhone SE 2	A2298	256G	国行	白色
+iPhone SE 2	A2298	128G	国行	白色
+iPhone SE 2	A2298	64G	国行	白色
+iPhone SE	其他型号	128G	国行	金色
+iPhone SE	其他型号	64G	国行	金色
+iPhone SE	其他型号	32G	国行	金色
+iPhone SE	其他型号	16G	国行	金色

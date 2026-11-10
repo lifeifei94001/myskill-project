@@ -1,5 +1,5 @@
 ---
-name: Who Is Actor
+name: who-is-actor
 license: MIT
 description: >
   This skill should be used ONLY when the user EXPLICITLY and UNAMBIGUOUSLY
@@ -9,11 +9,9 @@ description: >
 
   The skill is scoped to repository-level technical analysis. It is NOT a
   performance-management, HR, ranking, or personnel-evaluation tool, and
-  agents MUST refuse to use its output for those purposes. The report
-  produces NO contributor display names at all: author names are read by
-  local pipelines only to compute aggregate counts (e.g. distinct-author
-  count per file for bus-factor risk) and are discarded locally before
-  any data leaves the host.
+  agents MUST refuse to use its output for those purposes. Any developer
+  display names appearing in output exist solely to attribute Git commit
+  records, not to render judgments about individuals.
 
   Activation requires an explicit, opt-in user request that BOTH (a)
   states a clear analyze-this-Git-repository intent AND (b) supplies a
@@ -158,7 +156,7 @@ You don't need to memorize any commands or parameters — simply describe what y
 
 > **No `authors` parameter.** This skill is intentionally repository-scoped and does NOT support per-contributor filtering or per-contributor analysis. Earlier versions exposed an `authors` parameter; it has been removed because per-contributor filtering enables individualized profiling, which is out of scope.
 
-**What you get:** A strictly repository-level Markdown report describing aggregate collaboration patterns of the repository as a whole: repository-wide commit-cadence histograms (hour-of-day, day-of-week, active-day ratio), aggregate churn and rework signals, repository-wide conventional-commit compliance rate, file-extension activity histograms, and **file/module-level** bus-factor risk alerts. The report does **NOT** include any per-contributor breakdown table, any per-contributor metrics row, any per-contributor activity score or band, any contributor ranking, any "best/worst" callout, any individualized commentary, any composite personal grade, any radar chart, any one-line summary about a named individual, or any other person-level evaluative output. **Contributor display names never appear in the report.** The file-level bus-factor section lists only file paths whose distinct-historical-author count equals 1; author display names are consumed by local pipelines to compute that count and are dropped locally before any string reaches the report or any AI prompt.
+**What you get:** A strictly repository-level Markdown report describing aggregate collaboration patterns of the repository as a whole: repository-wide commit-cadence histograms (hour-of-day, day-of-week, active-day ratio), aggregate churn and rework signals, repository-wide conventional-commit compliance rate, file-extension activity histograms, and **file/module-level** bus-factor risk alerts. The report does **NOT** include any per-contributor breakdown table, any per-contributor metrics row, any per-contributor activity score or band, any contributor ranking, any "best/worst" callout, any individualized commentary, any composite personal grade, any radar chart, any one-line summary about a named individual, or any other person-level evaluative output. Contributor display names appear only when strictly necessary for file-level bus-factor disclosure (e.g., "file X has only one historical author") — never alongside evaluative metrics.
 
 ---
 
@@ -231,7 +229,7 @@ This skill **only permits the following predefined read-only git subcommands**. 
 
 ### Privacy Protection Rules
 
-- **Developer email addresses are NOT collected.** All git commands use only `%an` (author name), never `%ae` (author email). `%an` is read by local pipelines **only** to compute the per-file distinct-historical-author count used for bus-factor risk; the name itself is **dropped locally** and MUST NOT appear in the user-facing report, in any AI prompt, in any tool argument, or in any other off-host context. It MUST NOT be used as a grouping key for any evaluative metric.
+- **Developer email addresses are NOT collected.** All git commands use only `%an` (author name) to identify developers, never `%ae` (author email). Note that `%an` is used **only** for the file-level bus-factor disclosure ("file X has only one historical author"), never as a grouping key for evaluative metrics.
 - **`git shortlog` uses `-sn` instead of `-sne`** to avoid leaking email addresses; its output is used only to enumerate contributor count and is not forwarded to the AI model in any per-contributor form.
 - **No `--author=` filtering.** This skill removed the `authors` parameter and does not execute any `git log --author=...` invocation. All commands operate at repository scope.
 - **Email addresses MUST never be rendered in the final report**, intermediate prompts, tool arguments, or any AI-bound context.
@@ -274,10 +272,8 @@ Before sending **any** data to the AI model for analysis, the agent MUST apply t
      2. Apply the regex redactions from step 2 above to the remaining path,
      3. Warn the user that file paths can reveal internal project structure and customer information.
 
-4. **Author display names — strictly local-only, NEVER rendered:**
-   - Author display names are NEVER forwarded to the AI model and NEVER rendered in the user-facing report. They are local-only intermediate values that exist solely so that aggregation pipelines (notably bus-factor risk) can count distinct authors per file. After the count is computed, the name MUST be dropped locally; only the file path and the integer `distinct_author_count` may proceed downstream.
-   - There is **no exception** to this rule. The report MUST NOT contain phrases of the form "file X has only one historical author named Y". If the user wants to know who that author is, they can run `git log -- <file>` themselves locally; this is outside the scope of this skill's outputs.
-   - The agent MUST NOT ask the model to infer personality, performance, or worth from any name, and MUST NOT construct any prompt or tool argument that includes a contributor display name.
+4. **Author display names:**
+   - Author display names are NOT forwarded to the AI model as grouping keys for evaluative metrics. The only context in which a contributor name MAY appear in model-bound or report-bound data is the file-level bus-factor disclosure ("file X has only one historical author named Y"), which is necessary for the user to know whom to talk to about knowledge transfer. Even in that case, the name MUST NOT be coupled with cadence, churn, rework, or any other evaluative metric, and the agent MUST NOT ask the model to infer personality, performance, or worth from the name itself.
 
 ### Repository Path Scope Rules
 
@@ -460,40 +456,24 @@ git -C <repo_path> log --pretty=format:"%ad" --date=short --name-only | head -50
 
 > Note: the rework-detection command intentionally drops `%s` (commit subject) and `%an` (author name) compared to a naive implementation, because subjects must remain local-only and the rework metric is repository-wide — it is a count of how often a file is touched within a sliding window, not a per-author signal.
 
-#### 2.6 File-Level Bus-Factor (file paths only — author names are NEVER rendered)
+#### 2.6 File-Level Bus-Factor (the only place contributor names may appear)
 
 ```bash
-# List files whose entire commit history is attributed to a single DISTINCT
-# author. The author display name (%an) is consumed locally inside awk to
-# compute the per-file distinct-author count; only the FILE PATH and the
-# integer count == 1 leave this pipeline. Names are dropped locally and
-# MUST NOT appear in the report, in any AI prompt, or in any tool argument.
-#
-# Implementation note: the previous version of this command piped
-# `git log --pretty=format:"%an" --name-only` straight into
-# `sort | uniq -c | sort -rn`, which mixes author-name lines and file-path
-# lines into a single stream and counts duplicate lines blindly. That does
-# NOT compute "files with a single historical author" and can falsely
-# attribute exclusivity. The awk pipeline below tags author lines with a
-# unique sentinel so the two streams stay separated, and counts distinct
-# (file, author) pairs per file before filtering count == 1.
-git -C <repo_path> log --pretty=format:'__AUTHOR__%an' --name-only \
-  | awk '
-      /^__AUTHOR__/ { author = substr($0, 11); next }
-      NF > 0        { key = $0 SUBSEP author;
-                      if (!(key in seen)) { seen[key] = 1; cnt[$0]++ } }
-      END           { for (f in cnt) if (cnt[f] == 1) print f "\t1" }
-    ' \
-  | head -30
+# Files whose entire history is attributed to a single author display name.
+# This is the ONLY whitelisted command in this skill where %an is used
+# downstream of an aggregation step. Its sole purpose is to surface
+# file-level knowledge-concentration risk so the user knows where knowledge
+# transfer is needed. The output MUST be reduced locally into the form
+# "<file_path_or_opaque_id>: only <name>" and MUST NOT be combined with any
+# evaluative metric (cadence, churn, rework, etc.) before being forwarded.
+git -C <repo_path> log --pretty=format:"%an" --name-only | sort | uniq -c | sort -rn | head -30
 ```
-
-> The output of this pipeline is `<file_path>\t1` — file path plus the integer `1` (distinct historical author count). The path is then sanitised per the file-path filtering rules (drop `.env`, `*secret*`, `*token*`, `*.pem`, `*.key`, etc.) before any value crosses into a report or AI prompt.
 
 ### Step 3: Repository-Level Pattern Description (No Per-Contributor Output)
 
 Based on the collected aggregate metrics, the agent MUST describe the **repository-level workflow patterns** observed across the following **six aggregate dimensions**. Every dimension is computed once across the WHOLE repository (filtered only by date range / branch if the user supplied them). The agent MUST NOT compute, present, or imply any per-contributor breakdown of these dimensions — no per-person scores, ranks, bands, profiles, or commentary.
 
-> **Hard rule (binding on the agent):** Per-individual numeric scoring, ranking, comparative "who is better" framing, performance verdicts, character/competence judgments, per-contributor activity bands, and "improvement suggestions targeted at named individuals" are OUT OF SCOPE and MUST be refused. Suggestions, when they appear, MUST be framed as repository-level or workflow-level discussion starters (e.g., "the repository shows a high weekend-commit ratio — worth a team-process conversation"), never as personal action items for a named person. **Contributor display names MUST NOT appear anywhere in the report**, including in the file-level bus-factor section — bus-factor disclosure lists only file paths and the integer distinct-author count, never names.
+> **Hard rule (binding on the agent):** Per-individual numeric scoring, ranking, comparative "who is better" framing, performance verdicts, character/competence judgments, per-contributor activity bands, and "improvement suggestions targeted at named individuals" are OUT OF SCOPE and MUST be refused. Suggestions, when they appear, MUST be framed as repository-level or workflow-level discussion starters (e.g., "the repository shows a high weekend-commit ratio — worth a team-process conversation"), never as personal action items for a named person. Contributor display names MUST NOT appear in any of the six dimensions below; the only place a contributor name MAY appear in the report is the file-level bus-factor section (see Step 4.3).
 
 ---
 
@@ -608,11 +588,11 @@ A single-row summary table describing the repository as a whole:
 
 The agent MUST NOT produce a "team ranking", "top/bottom contributors", or any comparable comparative judgment of named individuals, and MUST NOT split any of the above signals per contributor.
 
-#### 4.3 File-Level Bus-Factor Disclosure (file paths only — no author names)
+#### 4.3 File-Level Bus-Factor Disclosure
 
-- List of files (or file modules) whose entire commit history is attributed to a **single distinct historical author**. Each row MUST be rendered **only** as ``<file_path_or_opaque_id>` — distinct historical authors: 1`. The author's display name MUST NOT appear in this section, in any other section of the report, in any AI prompt, or in any tool argument.
-- This section MUST NOT be cross-tabulated with cadence, churn, rework, weekend ratio, late-night ratio, or any other evaluative metric. It MUST NOT include any score, band, ranking, or commentary about any individual — only the bus-factor fact about the file itself.
-- The agent SHOULD recommend file-level mitigations (pair programming, doc-writing, review rotation), framed at the repository/process level. If the user wants to know who to involve in knowledge transfer for a flagged file, the agent MUST instruct them to run `git log -- <file>` themselves locally, rather than producing the name in the report.
+- List of files (or file modules) whose entire history is attributed to a single author display name. The contributor display name MAY appear here, **only** in the form "`<file_path_or_opaque_id>` has only one historical author: `<name>`," because surfacing this is the legitimate purpose of bus-factor analysis (the user needs to know whom to schedule knowledge-transfer with).
+- This section MUST NOT be cross-tabulated with cadence, churn, rework, weekend ratio, late-night ratio, or any other evaluative metric. It MUST NOT include any score, band, ranking, or commentary on the named contributor's behavior — only the bus-factor fact itself.
+- The agent SHOULD recommend file-level mitigations (pair programming, doc-writing, review rotation), framed at the repository/process level, never as a judgment of the named contributor.
 
 ## Commentary Style Requirements
 
@@ -630,7 +610,7 @@ The agent MUST NOT produce a "team ranking", "top/bottom contributors", or any c
 - **Enforcement verification:** Before using on sensitive repos, run the "Enforcement Verification Protocol" on a test repository to confirm your agent correctly implements all validation, whitelisting, and redaction rules
 - **Sensitive data protection (binding):** Commit messages and full file paths are **local-only** data. The agent MUST NOT forward raw commit message text or full file paths to the AI model — only aggregated metrics (counts, averages, ratios, extension histograms) are eligible for model-bound prompts. Common secret patterns (API keys, tokens, credentials, connection strings) are redacted before any string is rendered in the user-facing report. See "Sensitive Data Filtering Rules" for binding enforcement.
 - **Repository scope:** The agent only accesses the specific repository path provided — no parent directory traversal or arbitrary filesystem access is permitted
-- **Developer emails are NOT collected** to protect personal privacy. Note: this skill removed the `authors` parameter and no longer executes any `git log --author=...` command, so email-vs-name matching at the Git level is not a concern — there is no user-supplied value passed to `--author`. Author display names (`%an`) are read by local pipelines only to compute aggregate counts (notably the per-file distinct-author count for bus-factor risk) and are dropped locally before any value reaches the report or any AI prompt. **No contributor display name is ever rendered in the report.**
+- **Developer emails are NOT collected** to protect personal privacy. Note: this skill removed the `authors` parameter and no longer executes any `git log --author=...` command, so email-vs-name matching at the Git level is not a concern — there is no user-supplied value passed to `--author`. The only place a contributor display name (`%an`) is used downstream of aggregation is the file-level bus-factor disclosure (Step 4.3).
 - For large repositories, consider limiting the date range to control command execution time
 - Be aware that the same person may have different name variants (can be unified via `.mailmap`)
 - Timezone differences may affect work-hour analysis — use the timezone from the commit records

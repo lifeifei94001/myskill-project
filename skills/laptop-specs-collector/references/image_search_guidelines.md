@@ -85,11 +85,15 @@ document.querySelectorAll('table.param-table tr').forEach(row => {
 
 ---
 
-## 四、 核心红线：防假图链接（Zero URL Hallucination）与防盗链解决标准
+## 四、 核心红线：防假图链接（Zero URL Hallucination）与 2 步搜图熔断
 
-1. **绝对严禁凭空编造/拼接图片直链**：各大品牌 CDN（如 `lefile.cn`、`360buyimg.com`、`zol-img.com.cn`）均使用内部 Hash 命名，严禁凭空构造虚假路径。
-2. **必须添加 `referrerpolicy="no-referrer"` 防盗链指令**：
+1. **严格 2 步搜索熔断（严禁死循环）**：
+   - 全程调用 `search_web` 不得超过 2 次；
+   - 绝大多数品牌（华为、苹果、联想）的搜索引擎摘要中只有图库网页链接，不会直接打印 `.jpg` 文件名。**严禁为了找一个 `.jpg` 后缀反复搜索几十次！**
+   - 只要拿到官方商城详情页或 ZOL 对应机型图库页，立即作为【官方图库/商详直达页】交付，立刻停止检索！
+2. **绝对严禁凭空编造/拼接图片直链**：各大品牌 CDN（如 `lefile.cn`、`360buyimg.com`、`zol-img.com.cn`）均使用内部 Hash 命名，严禁凭空构造虚假路径。
+3. **必须添加 `referrerpolicy="no-referrer"` 防盗链指令**：
    ```html
    <img src="真实图片URL" referrerpolicy="no-referrer" width="300" alt="展开白底图" />
    ```
-3. **双轨交付机制 (Direct Image + Official Gallery Fallback)**：必须同时交付真实图片与官方图库直达链接。
+4. **双轨交付机制 (Direct Image + Official Gallery Fallback)**：必须同时交付真实图片与官方图库直达链接。

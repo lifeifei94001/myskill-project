@@ -1,5 +1,5 @@
 name: who-is-actor
-version: 1.0.15
+version: 1.0.14
 description: >
   A zero-*install*-dependency Git repository COLLABORATION-PATTERN analysis
   skill. It produces an aggregate, repository-level report describing commit
@@ -131,11 +131,10 @@ outputs:
       band, any contributor ranking, any "best/worst" callouts, any
       individualized commentary, any composite personal grade, any radar
       chart, any one-line summary about a named individual, or any other
-      person-level output. Contributor display names NEVER appear in the
-      report. The file-level bus-factor section lists only file paths whose
-      distinct-historical-author count equals 1; author names are consumed
-      by local pipelines to compute that count and are dropped locally
-      before any value reaches the report or any AI prompt.
+      person-level output. Contributor display names appear in the report
+      only when strictly necessary for file-level bus-factor disclosure
+      (e.g., "file X has only one historical author") and never alongside
+      evaluative metrics.
 
       It is not a developer profile, report card, or HR/personnel artifact
       and MUST NOT be used for performance reviews, ranking, hiring/firing,

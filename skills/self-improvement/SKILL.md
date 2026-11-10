@@ -1,138 +1,49 @@
 ---
 name: self-improvement
-description: "Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude ('No, that's wrong...', 'Actually...'), (3) User requests a capability that doesn't exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks."
-metadata:
+description: "Captures learnings, errors, corrections, and feature requests to enable continuous improvement. Use when: (1) User corrects Claude ('No, that's wrong...', 'Actually...'), (2) User requests a capability that doesn't exist, (3) Claude realizes its knowledge is outdated or incorrect, (4) A better approach is discovered for a recurring task, (5) Receiving a Handoff block from self-healing (a recurring verified heal with Recurrence-Count at least 3) to distill into a memory file or new skill. For ACTIVE runtime failures where the agent needs to apply and verify a fix mid-task, use `self-healing` instead (it files HEAL- entries with proof; self-improvement promotes accumulated patterns). Also review learnings before major tasks. For CI-only/headless learning capture, use self-improvement-ci."
 ---
 
 # Self-Improvement Skill
 
 Log learnings and errors to markdown files for continuous improvement. Coding agents can later process these into fixes, and important learnings get promoted to project memory.
 
+For installation commands, see [references/installation.md](references/installation.md). For optional agent activation and hooks, see [references/hooks-setup.md](references/hooks-setup.md). Read these only when installing or configuring the skill.
+
+**Pair with [`self-healing`](../self-healing/SKILL.md):** self-healing is the active runtime recovery primitive — it diagnoses, patches, verifies, and files `HEAL-` entries to `.learnings/HEALS.md` when something breaks mid-task. Self-improvement (this skill) is the passive accumulation and promotion layer — it logs corrections, knowledge gaps, and feature requests, and promotes recurring heal handoffs to permanent memory. They share `.learnings/` but write to different files; verify discipline lives in self-healing, promotion logic lives here.
+
 ## Quick Reference
 
 | Situation | Action |
 |-----------|--------|
-| Command/operation fails | Log to `.learnings/ERRORS.md` |
+| Active failure mid-task — agent needs to fix it now | **Use `self-healing` instead** (files verified HEAL- to `.learnings/HEALS.md`) |
+| Command/operation failed in the past (not actively healing) | Log to `.learnings/ERRORS.md` |
 | User corrects you | Log to `.learnings/LEARNINGS.md` with category `correction` |
 | User wants missing feature | Log to `.learnings/FEATURE_REQUESTS.md` |
 | API/external tool fails | Log to `.learnings/ERRORS.md` with integration details |
+| Self-healing Handoff block meets promotion rule (see Promotion Rule below) | Promote the Distilled Rule to `CLAUDE.md` / `AGENTS.md` / new skill |
 | Knowledge was outdated | Log to `.learnings/LEARNINGS.md` with category `knowledge_gap` |
 | Found better approach | Log to `.learnings/LEARNINGS.md` with category `best_practice` |
 | Simplify/Harden recurring patterns | Log/update `.learnings/LEARNINGS.md` with `Source: simplify-and-harden` and a stable `Pattern-Key` |
 | Similar to existing entry | Link with `**See Also**`, consider priority bump |
 | Broadly applicable learning | Promote to `CLAUDE.md`, `AGENTS.md`, and/or `.github/copilot-instructions.md` |
-| Workflow improvements | Promote to `AGENTS.md` (OpenClaw workspace) |
-| Tool gotchas | Promote to `TOOLS.md` (OpenClaw workspace) |
-| Behavioral patterns | Promote to `SOUL.md` (OpenClaw workspace) |
 
-## OpenClaw Setup (Recommended)
+## Setup
 
-OpenClaw is the primary platform for this skill. It uses workspace-based prompt injection with automatic skill loading.
-
-### Installation
-
-**Via ClawdHub (recommended):**
-```bash
-clawdhub install self-improving-agent
-```
-
-**Manual:**
-```bash
-git clone https://github.com/peterskoett/self-improving-agent.git ~/.openclaw/skills/self-improving-agent
-```
-
-Remade for openclaw from original repo : https://github.com/pskoett/pskoett-ai-skills - https://github.com/pskoett/pskoett-ai-skills/tree/main/skills/self-improvement
-
-### Workspace Structure
-
-OpenClaw injects these files into every session:
-
-```
-~/.openclaw/workspace/
-├── AGENTS.md          # Multi-agent workflows, delegation patterns
-├── SOUL.md            # Behavioral guidelines, personality, principles
-├── TOOLS.md           # Tool capabilities, integration gotchas
-├── MEMORY.md          # Long-term memory (main session only)
-├── memory/            # Daily memory files
-│   └── YYYY-MM-DD.md
-└── .learnings/        # This skill's log files
-    ├── LEARNINGS.md
-    ├── ERRORS.md
-    └── FEATURE_REQUESTS.md
-```
-
-### Create Learning Files
-
-```bash
-mkdir -p ~/.openclaw/workspace/.learnings
-```
-
-Then create the log files (or copy from `assets/`):
-- `LEARNINGS.md` — corrections, knowledge gaps, best practices
-- `ERRORS.md` — command failures, exceptions
-- `FEATURE_REQUESTS.md` — user-requested capabilities
-
-### Promotion Targets
-
-When learnings prove broadly applicable, promote them to workspace files:
-
-| Learning Type | Promote To | Example |
-|---------------|------------|---------|
-| Behavioral patterns | `SOUL.md` | "Be concise, avoid disclaimers" |
-| Workflow improvements | `AGENTS.md` | "Spawn sub-agents for long tasks" |
-| Tool gotchas | `TOOLS.md` | "Git push needs auth configured first" |
-
-### Inter-Session Communication
-
-OpenClaw provides tools to share learnings across sessions:
-
-- **sessions_list** — View active/recent sessions
-- **sessions_history** — Read another session's transcript  
-- **sessions_send** — Send a learning to another session
-- **sessions_spawn** — Spawn a sub-agent for background work
-
-### Optional: Enable Hook
-
-For automatic reminders at session start:
-
-```bash
-# Copy hook to OpenClaw hooks directory
-cp -r hooks/openclaw ~/.openclaw/hooks/self-improvement
-
-# Enable it
-openclaw hooks enable self-improvement
-```
-
-See `references/openclaw-integration.md` for complete details.
-
----
-
-## Generic Setup (Other Agents)
-
-For Claude Code, Codex, Copilot, or other agents, create `.learnings/` in your project:
+Create `.learnings/` directory in project root if it doesn't exist:
 
 ```bash
 mkdir -p .learnings
 ```
 
-Copy templates from `assets/` or create files with headers.
-
-### Add reference to agent files AGENTS.md, CLAUDE.md, or .github/copilot-instructions.md to remind yourself to log learnings. (this is an alternative to hook-based reminders)
-
-#### Self-Improvement Workflow
-
-When errors or corrections occur:
-1. Log to `.learnings/ERRORS.md`, `LEARNINGS.md`, or `FEATURE_REQUESTS.md`
-2. Review and promote broadly applicable learnings to:
-   - `CLAUDE.md` - project facts and conventions
-   - `AGENTS.md` - workflows and automation
-   - `.github/copilot-instructions.md` - Copilot context
+Copy the file templates from `assets/` (`LEARNINGS.md`, `ERRORS.md`, `FEATURE_REQUESTS.md`) or create files with headers.
 
 ## Logging Format
 
 ### Learning Entry
-
 Append to `.learnings/LEARNINGS.md`:
+
+Every saved learning gets maintenance fields at capture, even if never promoted.
+Use [references/context-maintenance.md](references/context-maintenance.md); keep unknowns explicit.
 
 ```markdown
 ## [LRN-YYYYMMDD-XXX] category
@@ -160,6 +71,14 @@ Specific fix or improvement to make
 - Recurrence-Count: 1 (optional)
 - First-Seen: 2025-01-15 (optional)
 - Last-Seen: 2025-01-15 (optional)
+
+### Context Maintenance
+- Decay-Type: reality | decision | dependency | relevance | unknown
+- Decay-Rate: fast | medium | slow | durable | unknown (brief basis)
+- Authority: source or unknown; Owner: known role or unknown
+- Revalidation: method; invalidating triggers; when to check; unavailable-source behavior
+- Validation: pending | verified | unresolved; Last-Validated: date or none; Evidence: checked source or none
+- Disposition: unassessed | retain | revise | externalize | retire; Application: proposed | applied
 
 ---
 ```
@@ -258,6 +177,7 @@ Other status values:
 - `in_progress` - Actively being worked on
 - `wont_fix` - Decided not to address (add reason in Resolution notes)
 - `promoted` - Elevated to CLAUDE.md, AGENTS.md, or .github/copilot-instructions.md
+- `promoted_to_skill` - Extracted as a reusable skill (see Automatic Skill Extraction)
 
 ## Promoting to Project Memory
 
@@ -277,16 +197,43 @@ When a learning is broadly applicable (not a one-off fix), promote it to permane
 | `CLAUDE.md` | Project facts, conventions, gotchas for all Claude interactions |
 | `AGENTS.md` | Agent-specific workflows, tool usage patterns, automation rules |
 | `.github/copilot-instructions.md` | Project context and conventions for GitHub Copilot |
-| `SOUL.md` | Behavioral guidelines, communication style, principles (OpenClaw workspace) |
-| `TOOLS.md` | Tool capabilities, usage patterns, integration gotchas (OpenClaw workspace) |
 
 ### How to Promote
 
-1. **Distill** the learning into a concise rule or fact
-2. **Add** to appropriate section in target file (create file if needed)
-3. **Update** original entry:
-   - Change `**Status**: pending` → `**Status**: promoted`
-   - Add `**Promoted**: CLAUDE.md`, `AGENTS.md`, or `.github/copilot-instructions.md`
+The main agent performs this step using the learning entry or the
+`learning-aggregator` gap report. No dedicated agent preset is required.
+
+1. **Check eligibility and relevance.** Apply the Promotion Rule below, read
+   the supporting entries and related files, and check existing instructions.
+   If the rule is already covered, record the existing target rather than
+   duplicating it. Flag stale evidence or conflicting rules for human review;
+   do not silently dismiss entries or overwrite existing guidance.
+2. **Distill** the pattern into one to three actionable, contextual sentences.
+   Choose the appropriate target and section, preserving its organization and
+   any required synchronization across instruction files. Promotion changes
+   instructions, not application code.
+3. **Show the proposed diff for human approval before writing instructions.**
+   Apply only the approved changes. In Copilot, present the diff and ask in chat.
+   Skill edits require explicit scoped approval as described below.
+4. **Update the source entry after promotion:** set `**Status**: promoted`,
+   record `**Promoted**: <target files>` and `Promoted-Date: YYYY-MM-DD`, and
+   retain the source IDs and Pattern-Key. Do not mark an unapplied proposal as
+   promoted. Promotion approval does not authorize committing or publishing.
+5. **Flag eval candidates** for `eval-creator` when the rule has a clear
+   pass/fail condition. Include the Pattern-Key, rule, target, source IDs,
+   recurrence evidence, assertion, and verification method.
+
+When a gap report supplies a `tracker`, preserve it as the Pattern-Key in the
+handoff. Projects using inline provenance can also place
+`<!-- tracker:[pattern-key] source:[entry-IDs] promoted:YYYY-MM-DD eval:[eval-ID] -->`
+above the rule; omit unknown fields. Tracker comments are optional.
+
+### Context Maintenance at Promotion
+Refine the capture-time contract at promotion; use `context-decay` when available.
+Keep metadata in the learning and only the rule or retrieval pointer in instructions.
+Review does not change recurrence or eligibility; see `references/context-maintenance.md`.
+For stale skill guidance, surface a concrete proposal even on the first learning.
+Skill edits/retirement need explicit scoped approval, even without `context-decay`; see the same reference.
 
 ### Promotion Examples
 
@@ -355,7 +302,8 @@ Promotion targets:
 - `CLAUDE.md`
 - `AGENTS.md`
 - `.github/copilot-instructions.md`
-- `SOUL.md` / `TOOLS.md` for OpenClaw workspace-level guidance when applicable
+
+This three-condition rule is the single promotion threshold for this skill. The Quick Reference row for self-healing Handoff blocks and the aggregator skills (`learning-aggregator`, `learning-aggregator-ci`) all use this same rule.
 
 Write promoted rules as short prevention rules (what to do before/while coding),
 not long incident write-ups.
@@ -387,6 +335,10 @@ grep -l "Area\*\*: backend" .learnings/*.md
 - Promote applicable learnings
 - Link related entries
 - Escalate recurring issues
+- Review saved learnings, including one-off and unpromoted entries, when their
+  source, decision, dependency, or review point changes. Update the existing
+  contract using `references/context-maintenance.md`; use `context-decay` when
+  available. A review is not recurrence or evidence for age-based removal.
 
 ## Detection Triggers
 
@@ -445,7 +397,7 @@ Use to filter learnings by codebase region:
 4. **Link related files** - makes fixes easier
 5. **Suggest concrete fixes** - not just "investigate"
 6. **Use consistent categories** - enables filtering
-7. **Promote aggressively** - if in doubt, add to CLAUDE.md or .github/copilot-instructions.md
+7. **Promote selectively** - apply the promotion rule; prefer a source-retrieval pointer when a copied fact would quickly become stale
 8. **Review regularly** - stale learnings lose value
 
 ## Gitignore Options
@@ -466,59 +418,7 @@ Don't add to .gitignore - learnings become shared knowledge.
 
 ## Hook Integration
 
-Enable automatic reminders through agent hooks. This is **opt-in** - you must explicitly configure hooks.
-
-### Quick Setup (Claude Code / Codex)
-
-Create `.claude/settings.json` in your project:
-
-```json
-{
-  "hooks": {
-    "UserPromptSubmit": [{
-      "matcher": "",
-      "hooks": [{
-        "type": "command",
-        "command": "./skills/self-improvement/scripts/activator.sh"
-      }]
-    }]
-  }
-}
-```
-
-This injects a learning evaluation reminder after each prompt (~50-100 tokens overhead).
-
-### Full Setup (With Error Detection)
-
-```json
-{
-  "hooks": {
-    "UserPromptSubmit": [{
-      "matcher": "",
-      "hooks": [{
-        "type": "command",
-        "command": "./skills/self-improvement/scripts/activator.sh"
-      }]
-    }],
-    "PostToolUse": [{
-      "matcher": "Bash",
-      "hooks": [{
-        "type": "command",
-        "command": "./skills/self-improvement/scripts/error-detector.sh"
-      }]
-    }]
-  }
-}
-```
-
-### Available Hook Scripts
-
-| Script | Hook Type | Purpose |
-|--------|-----------|---------|
-| `scripts/activator.sh` | UserPromptSubmit | Reminds to evaluate learnings after tasks |
-| `scripts/error-detector.sh` | PostToolUse (Bash) | Triggers on command errors |
-
-See `references/hooks-setup.md` for detailed configuration and troubleshooting.
+Automatic reminders are **opt-in**. Claude Code, Codex CLI, and Copilot have different event and output contracts; see [references/hooks-setup.md](references/hooks-setup.md). Amp loads skills on demand and uses a separate native plugin for per-turn reminders; see [references/amp-setup.md](references/amp-setup.md). Reminders do not write learnings or guarantee capture.
 
 ## Automatic Skill Extraction
 
@@ -586,46 +486,6 @@ Before extraction, verify:
 - [ ] Follows skill naming conventions (lowercase, hyphens)
 
 ## Multi-Agent Support
-
-This skill works across different AI coding agents with agent-specific activation.
-
-### Claude Code
-
-**Activation**: Hooks (UserPromptSubmit, PostToolUse)
-**Setup**: `.claude/settings.json` with hook configuration
-**Detection**: Automatic via hook scripts
-
-### Codex CLI
-
-**Activation**: Hooks (same pattern as Claude Code)
-**Setup**: `.codex/settings.json` with hook configuration
-**Detection**: Automatic via hook scripts
-
-### GitHub Copilot
-
-**Activation**: Manual (no hook support)
-**Setup**: Add to `.github/copilot-instructions.md`:
-
-```markdown
-## Self-Improvement
-
-After solving non-obvious issues, consider logging to `.learnings/`:
-1. Use format from self-improvement skill
-2. Link related entries with See Also
-3. Promote high-value learnings to skills
-
-Ask in chat: "Should I log this as a learning?"
-```
-
-**Detection**: Manual review at session end
-
-### OpenClaw
-
-**Activation**: Workspace injection + inter-agent messaging
-**Setup**: See "OpenClaw Setup" section above
-**Detection**: Via session tools and workspace files
-
-### Agent-Agnostic Guidance
 
 Regardless of agent, apply self-improvement when you:
 

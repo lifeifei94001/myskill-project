@@ -1,59 +1,52 @@
-# 本地工具链与插件协同检索指南 (Toolchain & Plugin Integration)
+# 工具链协同与极速执行防卡死指南 (Fast Execution & Anti-Hang Guidelines)
 
-为了彻底解决“图片打不开、404、500 Whitelabel 报错、图片链接幻觉”等问题，`laptop-specs-collector` 与本地反重力环境中的工具及插件进行深度联动，构建自动化图片探测与抓取链路。
-
----
-
-## 一、 推荐协同插件与 Skill 矩阵
-
-| 工具/Skill 名称 | 类型 | 适用场景 | 核心调用命令与能力 |
-|---|---|---|---|
-| **`tavily-search-pro`** | 搜索增强 Skill | 快速批量抓取真实图片 CDN | `python {tavily}/lib/tavily_search.py search "<机型> 官网/ZOL" --images`<br>👉 **自带 `--images` 模式，直接返回真实 CDN 图片 URL 列表** |
-| **`chrome-devtools-plugin`** | 官方 MCP 插件 | 真实浏览器直驱，抓取 DOM 真实 `src` | 通过 Chrome DevTools MCP 打开 ZOL 或官网，执行 `evaluate_script` 提取高保真白底大图 |
-| **`agent-browser`** | 自动化浏览器 CLI | 高性能无头浏览器交互 | `agent-browser open <url>` + `agent-browser get attr @element "src"` |
-| **`anysearch`** | 搜索引擎 Skill | 网页内容与 DOM 抽取 | `python {anysearch}/scripts/anysearch_cli.py extract "<url>"` 直接提取页面图片与内容 |
+> ⚠️ **关键性能警告与铁律（避免 10 分钟死锁超时）**：
+> 在 Antigravity 的终端沙箱（Terminal Sandbox）环境中，通过 Shell 运行的 Python 脚本或 CLI 命令**默认没有直接访问公网 Socket 的权限**！
+> **绝对禁止**让 Agent 在终端中运行 `python tavily_search.py`、`agent-browser open`、`curl` 或通过命令行拉起 Chrome 浏览器去请求外网。这会导致 TCP 连接无限挂起等待超时，触发长达 10 分钟以上的死锁！
 
 ---
 
-## 二、 自动化采集与验证链路 (Pipeline)
+## 一、 极速执行铁律：仅使用原生 `search_web` 工具（3~5 秒极速返回）
+
+要实现极速秒级响应且 100% 稳定不卡死，Agent **必须严格使用 Antigravity 宿主原生工具**：
+
+1. **唯一合法的外网检索工具**：**`search_web`**
+   - **优势**：宿主原生并发连接，不受终端沙箱网络权限限制；
+   - **耗时**：每次检索仅需 **1~2 秒**，稳定可靠，永不超时；
+   - **检索方式**：
+     - 查询配置：`search_web(query="[机型名称] 官网商城 SKU 配置 在售")`
+     - 查询图片：`search_web(query="[机型名称] 官方渲染图 白底图 OR zol-img")`
+2. **唯一合法的本地工具**：**`format_specs.py`**
+   - **定位**：纯离线文本格式化工具，零网络依赖，执行时间 **0.01 秒**。
+
+---
+
+## 二、 3 秒极速标准流水线 (Fast-Track Pipeline)
 
 ```
-用户输入：笔记本机型（如：拯救者 Y9000P 2026）
+用户输入：笔记本机型（如：联想 拯救者 Y9000P 2026）
                 │
                 ▼
-【步骤 1：调用 Tavily --images 或 浏览器工具定位真实图源】
-优先执行：
-`tavily_search.py search "联想 拯救者 Y9000P 2026 外观白底图" --images`
-或通过 Chrome DevTools 直接进入 `detail.zol.com.cn` 产品图库
+【第 1 步：原生高速查参数】（耗时约 1.5 秒）
+调用原生 `search_web` 查询该机型的官方真实 SKU 与发布/首销日期
                 │
                 ▼
-【步骤 2：提取真实带 Hash 的 CDN 图片直链】
-从真实页面中提取：
-- 正视展开图（包含 B面屏 + C面键盘）
-- 斜后/背视展开图（包含 A面LOGO + 尾部出风口）
-严禁任何拼凑构造虚假 URL！
+【第 2 步：原生高速查图片】（耗时约 1.5 秒）
+调用原生 `search_web` 检索该机型的官方图库、ZOL 真实白底直链
+（严格核对正视与背视两张不同视角，严禁同一张图）
                 │
                 ▼
-【步骤 3：注入防盗链保护并格式化】
-在 Markdown/HTML 中统一添加 `referrerpolicy="no-referrer"`
+【第 3 步：纯本地离线格式化】（耗时约 0.05 秒）
+调用本地 `scripts/format_specs.py` 完成排版
+注入 referrerpolicy="no-referrer" 与双轨图库直达
                 │
                 ▼
-【步骤 4：交付黄金组合】
-成套输出：白底双图预览 + 官方图库直达 + 8列真实配置表 + 上市时间 + 后台录入卡
+【总耗时 3~5 秒：直接交付四位一体黄金组合成果】
 ```
 
 ---
 
-## 三、 Tavily Search Pro 联动示范
+## 三、 何时才需要 Chrome DevTools / 外部工具？
 
-当配置有 `TAVILY_API_KEY` 时，直接在终端中运行：
-```bash
-python d:\APP\development_projects\.agents\skills\tavily-search-pro\lib\tavily_search.py search "联想 拯救者 R9000X 2026款 外观 官方渲染图" --images
-```
-返回输出：
-```text
-Images:
-- https://2b.zol-img.com.cn/product/275_800x600/415/ceLTP4WNBlRg.jpg
-- https://img14.360buyimg.com/n1/s800x800_jfs/t1/...
-```
-这些抓取到的 URL 是搜索引擎从目标页面 DOM 中直接提取的，保证 100% 真实存在，绝无拼凑臆测。
+- **日常所有查询一律严禁启动外部命令行网络工具**；
+- 只有当用户在对话中**显式要求**使用 DevTools 且系统已挂载 MCP 服务时，才通过 MCP 协议调用，绝不在终端里私自执行命令行挂起操作。

@@ -1,0 +1,9 @@
+PRD.md
+AGENTS.md
+DEVELOPMENT_PLAN.md
+references/operations-manual.md
+
+.DS_Store
+
+/tests/
+/scripts/tests/

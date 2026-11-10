@@ -1,174 +1,204 @@
-# Chargebee Routing Reference
+# Chargebee
+
+## API Reference
+
+> **Safety:** All write operations (POST, PUT, PATCH, DELETE) require explicit user confirmation before execution. Verify the target resource and intended effect with the user first. See the main [SKILL.md](../../SKILL.md#security--permissions) for full security policy.
 
 **App name:** `chargebee`
-**Base URL proxied:** `{subdomain}.chargebee.com`
+**Upstream base URL:** `{subdomain}.chargebee.com`
 
-The router automatically handles the subdomain from your connection.
+Replace the upstream base URL with the app name. Everything after the base URL including query strings is kept as-is. Any account-specific part of the base URL and the API credentials are stored in the Maton connection, and the gateway injects both so requests never carry them. For example:
 
-## API Path Pattern
+- Upstream: `https://{subdomain}.chargebee.com/api/v2/customers`
+- Gateway: `https://api.maton.ai/chargebee/api/v2/customers`
 
-```
-/chargebee/api/v2/{endpoint}
-```
-
-## Common Endpoints
-
-### Customers
+### Customers API
 
 #### List Customers
+
 ```bash
-GET /chargebee/api/v2/customers?limit=10
+maton api '/chargebee/api/v2/customers?limit=10'
 ```
 
 #### Get Customer
+
 ```bash
-GET /chargebee/api/v2/customers/{customerId}
+maton api '/chargebee/api/v2/customers/{customerId}'
 ```
 
-#### Create Customer
-```bash
-POST /chargebee/api/v2/customers
-Content-Type: application/x-www-form-urlencoded
+**Note:** `{customerId}` is a placeholder. Replace it with a real value before sending the request.
 
+#### Create Customer
+
+```bash
+maton api -X POST '/chargebee/api/v2/customers' -H 'Content-Type: application/x-www-form-urlencoded' --input - <<'BODY'
 first_name=John&last_name=Doe&email=john@example.com
+BODY
 ```
 
 #### Update Customer
-```bash
-POST /chargebee/api/v2/customers/{customerId}
-Content-Type: application/x-www-form-urlencoded
 
+```bash
+maton api -X POST '/chargebee/api/v2/customers/{customerId}' -H 'Content-Type: application/x-www-form-urlencoded' --input - <<'BODY'
 first_name=Jane
+BODY
 ```
 
-### Subscriptions
+**Note:** `{customerId}` is a placeholder. Replace it with a real value before sending the request.
+
+### Subscriptions API
 
 #### List Subscriptions
+
 ```bash
-GET /chargebee/api/v2/subscriptions?limit=10
+maton api '/chargebee/api/v2/subscriptions?limit=10'
 ```
 
 #### Get Subscription
+
 ```bash
-GET /chargebee/api/v2/subscriptions/{subscriptionId}
+maton api '/chargebee/api/v2/subscriptions/{subscriptionId}'
 ```
 
-#### Create Subscription
-```bash
-POST /chargebee/api/v2/subscriptions
-Content-Type: application/x-www-form-urlencoded
+**Note:** `{subscriptionId}` is a placeholder. Replace it with a real value before sending the request.
 
+#### Create Subscription
+
+```bash
+maton api -X POST '/chargebee/api/v2/subscriptions' -H 'Content-Type: application/x-www-form-urlencoded' --input - <<'BODY'
 plan_id=basic-plan&customer[email]=john@example.com&customer[first_name]=John
+BODY
 ```
 
 #### Cancel Subscription
-```bash
-POST /chargebee/api/v2/subscriptions/{subscriptionId}/cancel
-Content-Type: application/x-www-form-urlencoded
 
+```bash
+maton api -X POST '/chargebee/api/v2/subscriptions/{subscriptionId}/cancel' -H 'Content-Type: application/x-www-form-urlencoded' --input - <<'BODY'
 end_of_term=true
+BODY
 ```
 
-### Item Prices (Product Catalog 2.0)
+**Note:** `{subscriptionId}` is a placeholder. Replace it with a real value before sending the request.
+
+### Item Prices API
 
 #### List Item Prices
+
 ```bash
-GET /chargebee/api/v2/item_prices?limit=10
+maton api '/chargebee/api/v2/item_prices?limit=10'
 ```
 
 #### Get Item Price
+
 ```bash
-GET /chargebee/api/v2/item_prices/{itemPriceId}
+maton api '/chargebee/api/v2/item_prices/{itemPriceId}'
 ```
 
-### Items (Product Catalog 2.0)
+**Note:** `{itemPriceId}` is a placeholder. Replace it with a real value before sending the request.
+
+### Items API
 
 #### List Items
+
 ```bash
-GET /chargebee/api/v2/items?limit=10
+maton api '/chargebee/api/v2/items?limit=10'
 ```
 
 #### Get Item
+
 ```bash
-GET /chargebee/api/v2/items/{itemId}
+maton api '/chargebee/api/v2/items/{itemId}'
 ```
 
-### Plans (Product Catalog 1.0 - Legacy)
+**Note:** `{itemId}` is a placeholder. Replace it with a real value before sending the request.
+
+### Plans API
 
 #### List Plans
+
 ```bash
-GET /chargebee/api/v2/plans?limit=10
+maton api '/chargebee/api/v2/plans?limit=10'
 ```
 
 #### Get Plan
+
 ```bash
-GET /chargebee/api/v2/plans/{planId}
+maton api '/chargebee/api/v2/plans/{planId}'
 ```
 
-### Invoices
+**Note:** `{planId}` is a placeholder. Replace it with a real value before sending the request.
+
+### Invoices API
 
 #### List Invoices
+
 ```bash
-GET /chargebee/api/v2/invoices?limit=10
+maton api '/chargebee/api/v2/invoices?limit=10'
 ```
 
 #### Get Invoice
+
 ```bash
-GET /chargebee/api/v2/invoices/{invoiceId}
+maton api '/chargebee/api/v2/invoices/{invoiceId}'
 ```
+
+**Note:** `{invoiceId}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Download Invoice PDF
+
 ```bash
-POST /chargebee/api/v2/invoices/{invoiceId}/pdf
+maton api -X POST '/chargebee/api/v2/invoices/{invoiceId}/pdf'
 ```
 
-### Transactions
+### Transactions API
 
 #### List Transactions
+
 ```bash
-GET /chargebee/api/v2/transactions?limit=10
+maton api '/chargebee/api/v2/transactions?limit=10'
 ```
 
-### Hosted Pages
+### Hosted Pages API
 
 #### Checkout New Subscription
-```bash
-POST /chargebee/api/v2/hosted_pages/checkout_new_for_items
-Content-Type: application/x-www-form-urlencoded
 
+```bash
+maton api -X POST '/chargebee/api/v2/hosted_pages/checkout_new_for_items' -H 'Content-Type: application/x-www-form-urlencoded' --input - <<'BODY'
 subscription[plan_id]=basic-plan&customer[email]=john@example.com
+BODY
 ```
 
 #### Manage Payment Sources
-```bash
-POST /chargebee/api/v2/hosted_pages/manage_payment_sources
-Content-Type: application/x-www-form-urlencoded
 
+```bash
+maton api -X POST '/chargebee/api/v2/hosted_pages/manage_payment_sources' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  --input - <<'EOF'
 customer[id]=cust_123
+EOF
 ```
 
-### Portal Sessions
+### Portal Sessions API
 
 #### Create Portal Session
-```bash
-POST /chargebee/api/v2/portal_sessions
-Content-Type: application/x-www-form-urlencoded
 
+```bash
+maton api -X POST '/chargebee/api/v2/portal_sessions' -H 'Content-Type: application/x-www-form-urlencoded' --input - <<'BODY'
 customer[id]=cust_123
+BODY
 ```
 
-## Filtering
+### Filtering
 
 Use filter parameters:
 ```bash
-GET /chargebee/api/v2/subscriptions?status[is]=active
-GET /chargebee/api/v2/customers?email[is]=john@example.com
-GET /chargebee/api/v2/invoices?date[after]=1704067200
+maton api '/chargebee/api/v2/subscriptions?status[is]=active'
+maton api '/chargebee/api/v2/customers?email[is]=john@example.com'
+maton api '/chargebee/api/v2/invoices?date[after]=1704067200'
 ```
 
-## Notes
+### Notes
 
-- Authentication is automatic - the router injects Basic auth from your API key
 - Subdomain is automatically determined from your connection
 - Uses form-urlencoded data for POST requests
 - Nested objects use bracket notation: `customer[email]`
@@ -177,9 +207,9 @@ GET /chargebee/api/v2/invoices?date[after]=1704067200
 - Status values: `active`, `cancelled`, `non_renewing`, etc.
 - **Product Catalog versions**: Use `item_prices` and `items` for PC 2.0, or `plans` and `addons` for PC 1.0
 
-## Resources
+### Resources
 
-- [Getting Started](https://apidocs.chargebee.com/docs/api)
+- [Chargebee Getting Started](https://apidocs.chargebee.com/docs/api)
 - [List Customers](https://apidocs.chargebee.com/docs/api/customers/list-customers.md)
 - [Retrieve a Customer](https://apidocs.chargebee.com/docs/api/customers/retrieve-a-customer.md)
 - [Create a Customer](https://apidocs.chargebee.com/docs/api/customers/create-a-customer.md)
@@ -201,3 +231,4 @@ GET /chargebee/api/v2/invoices?date[after]=1704067200
 - [Checkout New Subscription](https://apidocs.chargebee.com/docs/api/hosted_pages/create-checkout-for-a-new-subscription.md)
 - [Manage Payment Sources](https://apidocs.chargebee.com/docs/api/hosted_pages/manage-payment-sources.md)
 - [Create a Portal Session](https://apidocs.chargebee.com/docs/api/portal_sessions/create-a-portal-session.md)
+- [Maton CLI Manual](https://cli.maton.ai/manual)

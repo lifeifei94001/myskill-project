@@ -1,38 +1,43 @@
-# Google Forms Routing Reference
+# Google Forms
+
+## API Reference
+
+> **Safety:** All write operations (POST, PUT, PATCH, DELETE) require explicit user confirmation before execution. Verify the target resource and intended effect with the user first. See the main [SKILL.md](../../SKILL.md#security--permissions) for full security policy.
 
 **App name:** `google-forms`
-**Base URL proxied:** `forms.googleapis.com`
+**Upstream base URL:** `forms.googleapis.com`
 
-## API Path Pattern
+Replace the upstream base URL with the app name. Everything after the base URL including query strings is kept as-is. Any account-specific part of the base URL and the API credentials are stored in the Maton connection, and the gateway injects both so requests never carry them. For example:
 
-```
-/google-forms/v1/forms/{formId}
-```
+- Upstream: `https://forms.googleapis.com/v1/forms`
+- Gateway: `https://api.maton.ai/google-forms/v1/forms`
 
-## Common Endpoints
+### Forms API
 
-### Get Form
+#### Get Form
+
 ```bash
-GET /google-forms/v1/forms/{formId}
+maton api '/google-forms/v1/forms/{formId}'
 ```
 
-### Create Form
-```bash
-POST /google-forms/v1/forms
-Content-Type: application/json
+**Note:** `{formId}` is a placeholder. Replace it with a real value before sending the request.
 
+#### Create Form
+
+```bash
+maton api -X POST '/google-forms/v1/forms' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "info": {
     "title": "Customer Feedback Survey"
   }
 }
+JSON
 ```
 
-### Batch Update Form
-```bash
-POST /google-forms/v1/forms/{formId}:batchUpdate
-Content-Type: application/json
+#### Batch Update Form
 
+```bash
+maton api -X POST '/google-forms/v1/forms/{formId}:batchUpdate' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "requests": [
     {
@@ -42,9 +47,7 @@ Content-Type: application/json
           "questionItem": {
             "question": {
               "required": true,
-              "textQuestion": {
-                "paragraph": false
-              }
+              "textQuestion": {"paragraph": false}
             }
           }
         },
@@ -53,21 +56,31 @@ Content-Type: application/json
     }
   ]
 }
+JSON
 ```
 
-### List Responses
+**Note:** `{formId}` is a placeholder. Replace it with a real value before sending the request.
+
+#### List Responses
+
 ```bash
-GET /google-forms/v1/forms/{formId}/responses
+maton api '/google-forms/v1/forms/{formId}/responses'
 ```
 
-### Get Response
+**Note:** `{formId}` is a placeholder. Replace it with a real value before sending the request.
+
+#### Get Response
+
 ```bash
-GET /google-forms/v1/forms/{formId}/responses/{responseId}
+maton api '/google-forms/v1/forms/{formId}/responses/{responseId}'
 ```
 
-## Common Requests for batchUpdate
+**Note:** `{formId}` and `{responseId}` are placeholders. Replace each of them with real values before sending the request.
 
-### Create Text Question
+### Common Requests for batchUpdate
+
+#### Create Text Question
+
 ```json
 {
   "createItem": {
@@ -85,7 +98,8 @@ GET /google-forms/v1/forms/{formId}/responses/{responseId}
 }
 ```
 
-### Create Multiple Choice Question
+#### Create Multiple Choice Question
+
 ```json
 {
   "createItem": {
@@ -110,7 +124,8 @@ GET /google-forms/v1/forms/{formId}/responses/{responseId}
 }
 ```
 
-### Create Checkbox Question
+#### Create Checkbox Question
+
 ```json
 {
   "createItem": {
@@ -133,7 +148,8 @@ GET /google-forms/v1/forms/{formId}/responses/{responseId}
 }
 ```
 
-### Create Scale Question
+#### Create Scale Question
+
 ```json
 {
   "createItem": {
@@ -155,7 +171,8 @@ GET /google-forms/v1/forms/{formId}/responses/{responseId}
 }
 ```
 
-### Update Form Info
+#### Update Form Info
+
 ```json
 {
   "updateFormInfo": {
@@ -168,7 +185,8 @@ GET /google-forms/v1/forms/{formId}/responses/{responseId}
 }
 ```
 
-### Delete Item
+#### Delete Item
+
 ```json
 {
   "deleteItem": {
@@ -177,7 +195,7 @@ GET /google-forms/v1/forms/{formId}/responses/{responseId}
 }
 ```
 
-## Question Types
+### Question Types
 
 - `textQuestion` - Short or paragraph text
 - `choiceQuestion` - Radio, checkbox, or dropdown
@@ -186,17 +204,16 @@ GET /google-forms/v1/forms/{formId}/responses/{responseId}
 - `timeQuestion` - Time picker
 - `fileUploadQuestion` - File upload
 
-## Notes
+### Notes
 
-- Authentication is automatic - the router injects the OAuth token
 - Form IDs can be found in the form URL
 - Responses include `answers` keyed by question ID
 - Use `updateMask` to specify which fields to update
 - Location index is 0-based for item positioning
 
-## Resources
+### Resources
 
-- [API Overview](https://developers.google.com/workspace/forms/api/reference/rest)
+- [Google Forms API Overview](https://developers.google.com/workspace/forms/api/reference/rest)
 - [Get Form](https://developers.google.com/workspace/forms/api/reference/rest/v1/forms/get)
 - [Create Form](https://developers.google.com/workspace/forms/api/reference/rest/v1/forms/create)
 - [Batch Update Form](https://developers.google.com/workspace/forms/api/reference/rest/v1/forms/batchUpdate)
@@ -204,3 +221,4 @@ GET /google-forms/v1/forms/{formId}/responses/{responseId}
 - [List Responses](https://developers.google.com/workspace/forms/api/reference/rest/v1/forms.responses/list)
 - [Get Response](https://developers.google.com/workspace/forms/api/reference/rest/v1/forms.responses/get)
 - [Form Resource](https://developers.google.com/workspace/forms/api/reference/rest/v1/forms)
+- [Maton CLI Manual](https://cli.maton.ai/manual)

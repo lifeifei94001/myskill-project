@@ -1,43 +1,15 @@
-# Notion MCP Routing Reference
-
-**App name:** `notion`
-**Base URL proxied:** `mcp.notion.com`
-
-## Request Headers
-
-MCP requests use the `Mcp-Session-Id` header for session management. If not specified, the gateway initializes a new session and returns the session ID in the `Mcp-Session-Id` response header. You can include this session ID in subsequent requests to reuse the same session.
-
-## Connection Management
-
-Manage MCP connections at `https://api.maton.ai`.
-
-### List Connections
-
-```bash
-GET https://api.maton.ai/connections?app=notion&method=MCP&status=ACTIVE
-Authorization: Bearer $MATON_API_KEY
-```
-
-### Create Connection
-
-```bash
-POST https://api.maton.ai/connections
-Content-Type: application/json
-Authorization: Bearer $MATON_API_KEY
-
-{
-  "app": "notion",
-  "method": "MCP"
-}
-```
-
-## API Path Pattern
-
-```
-/notion/{tool-name}
-```
+# Notion MCP
 
 ## MCP Reference
+
+> **Safety:** All write operations (POST, PUT, PATCH, DELETE) require explicit user confirmation before execution. Verify the target resource and intended effect with the user first. See the main [SKILL.md](../../SKILL.md#security--permissions) for full security policy.
+
+**App name:** `notion`
+**Upstream base URL:** `mcp.notion.com` (MCP server)
+
+This app is reached over MCP, so there is no upstream REST path to rewrite. Each MCP tool is a `POST` to the app name followed by the tool name; the arguments go in the JSON body. The API credentials are stored in the Maton connection, and the gateway injects them so requests never carry them. For example: `https://api.maton.ai/notion/notion-search`
+
+**Important:** MCP requests use the `Mcp-Session-Id` header for session management. If not specified, the gateway initializes a new session and returns the session ID in the `Mcp-Session-Id` response header. You can include this session ID in subsequent requests to reuse the same session.
 
 All MCP tools use `POST` method:
 
@@ -56,19 +28,20 @@ All MCP tools use `POST` method:
 | `notion-get-teams` | List workspace teams | [schema](schemas/notion-get-teams.json) |
 | `notion-get-users` | List workspace users | [schema](schemas/notion-get-users.json) |
 
-## Common Endpoints
+### Common Tools
 
-### Search
+#### Search Tool
 
 Search for pages and databases:
 ```bash
-POST /notion/notion-search
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-search' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "query": "meeting notes",
   "query_type": "internal"
 }
+EOF
 ```
 
 **Response:**
@@ -86,20 +59,21 @@ Content-Type: application/json
 
 Search for users:
 ```bash
-POST /notion/notion-search
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-search' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "query": "john@example.com",
   "query_type": "user"
 }
+EOF
 ```
 
 With date filter:
 ```bash
-POST /notion/notion-search
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-search' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "query": "quarterly report",
   "query_type": "internal",
@@ -110,18 +84,20 @@ Content-Type: application/json
     }
   }
 }
+EOF
 ```
 
-### Fetch Content
+#### Fetch Content Tool
 
 Fetch page by URL:
 ```bash
-POST /notion/notion-fetch
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-fetch' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "id": "https://notion.so/workspace/Page-a1b2c3d4e5f67890"
 }
+EOF
 ```
 
 **Response:**
@@ -139,42 +115,45 @@ Content-Type: application/json
 
 Fetch by UUID:
 ```bash
-POST /notion/notion-fetch
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-fetch' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "id": "12345678-90ab-cdef-1234-567890abcdef"
 }
+EOF
 ```
 
 Fetch data source (collection):
 ```bash
-POST /notion/notion-fetch
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-fetch' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "id": "collection://12345678-90ab-cdef-1234-567890abcdef"
 }
+EOF
 ```
 
 Include discussions:
 ```bash
-POST /notion/notion-fetch
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-fetch' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "id": "page-uuid",
   "include_discussions": true
 }
+EOF
 ```
 
-### Create Pages
+#### Create Pages Tool
 
 Create a simple page:
 ```bash
-POST /notion/notion-create-pages
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-create-pages' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "pages": [
     {
@@ -183,6 +162,7 @@ Content-Type: application/json
     }
   ]
 }
+EOF
 ```
 
 **Response:**
@@ -200,9 +180,9 @@ Content-Type: application/json
 
 Create page under parent:
 ```bash
-POST /notion/notion-create-pages
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-create-pages' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "parent": {"page_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"},
   "pages": [
@@ -212,13 +192,14 @@ Content-Type: application/json
     }
   ]
 }
+EOF
 ```
 
 Create page in data source (database):
 ```bash
-POST /notion/notion-create-pages
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-create-pages' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "parent": {"data_source_id": "f336d0bc-b841-465b-8045-024475c079dd"},
   "pages": [
@@ -233,15 +214,16 @@ Content-Type: application/json
     }
   ]
 }
+EOF
 ```
 
-### Update Page
+#### Update Page Tool
 
 Update properties:
 ```bash
-POST /notion/notion-update-page
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-update-page' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_id": "f336d0bc-b841-465b-8045-024475c079dd",
   "command": "update_properties",
@@ -250,6 +232,7 @@ Content-Type: application/json
     "Status": "Done"
   }
 }
+EOF
 ```
 
 **Response:**
@@ -267,55 +250,59 @@ Content-Type: application/json
 
 Replace entire content:
 ```bash
-POST /notion/notion-update-page
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-update-page' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_id": "f336d0bc-b841-465b-8045-024475c079dd",
   "command": "replace_content",
   "new_str": "# New Heading\n\nCompletely replaced content."
 }
+EOF
 ```
 
 Replace content range:
 ```bash
-POST /notion/notion-update-page
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-update-page' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_id": "f336d0bc-b841-465b-8045-024475c079dd",
   "command": "replace_content_range",
   "selection_with_ellipsis": "# Old Section...end of section",
   "new_str": "# New Section\n\nUpdated section content."
 }
+EOF
 ```
 
 Insert content after:
 ```bash
-POST /notion/notion-update-page
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-update-page' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_id": "f336d0bc-b841-465b-8045-024475c079dd",
   "command": "insert_content_after",
   "selection_with_ellipsis": "## Previous section...",
   "new_str": "\n## New Section\n\nInserted content here."
 }
+EOF
 ```
 
-### Move Pages
+#### Move Pages Tool
 
 Move to page:
 ```bash
-POST /notion/notion-move-pages
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-move-pages' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_or_database_ids": ["31502dc5-9a3b-816d-a2ac-e9b7ec9aece7"],
   "new_parent": {
     "page_id": "31502dc5-9a3b-81e4-b090-c6f705459e38"
   }
 }
+EOF
 ```
 
 **Response:**
@@ -333,39 +320,42 @@ Content-Type: application/json
 
 Move to workspace:
 ```bash
-POST /notion/notion-move-pages
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-move-pages' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_or_database_ids": ["page-id-1", "page-id-2"],
   "new_parent": {
     "type": "workspace"
   }
 }
+EOF
 ```
 
 Move to database:
 ```bash
-POST /notion/notion-move-pages
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-move-pages' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_or_database_ids": ["page-id"],
   "new_parent": {
     "data_source_id": "f336d0bc-b841-465b-8045-024475c079dd"
   }
 }
+EOF
 ```
 
-### Duplicate Page
+#### Duplicate Page Tool
 
 ```bash
-POST /notion/notion-duplicate-page
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-duplicate-page' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_id": "31502dc5-9a3b-816d-a2ac-e9b7ec9aece7"
 }
+EOF
 ```
 
 **Response:**
@@ -381,17 +371,18 @@ Content-Type: application/json
 }
 ```
 
-### Create Database
+#### Create Database Tool
 
 Create with SQL DDL schema:
 ```bash
-POST /notion/notion-create-database
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-create-database' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "title": "Task Database",
   "schema": "CREATE TABLE (\"Task Name\" TITLE, \"Status\" SELECT('To Do':red, 'In Progress':yellow, 'Done':green), \"Priority\" NUMBER)"
 }
+EOF
 ```
 
 **Response:**
@@ -407,16 +398,17 @@ Content-Type: application/json
 }
 ```
 
-### Update Data Source
+#### Update Data Source Tool
 
 ```bash
-POST /notion/notion-update-data-source
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-update-data-source' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "data_source_id": "c0f0ce51-c470-4e96-8c3f-cafca780f1a0",
   "name": "Updated Database Name"
 }
+EOF
 ```
 
 **Response:**
@@ -432,15 +424,16 @@ Content-Type: application/json
 }
 ```
 
-### Get Comments
+#### Get Comments Tool
 
 ```bash
-POST /notion/notion-get-comments
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-get-comments' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_id": "30702dc5-9a3b-8106-b51b-ed6d1bfeeed4"
 }
+EOF
 ```
 
 **Response:**
@@ -456,12 +449,12 @@ Content-Type: application/json
 }
 ```
 
-### Create Comment
+#### Create Comment Tool
 
 ```bash
-POST /notion/notion-create-comment
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-create-comment' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {
   "page_id": "f336d0bc-b841-465b-8045-024475c079dd",
   "rich_text": [
@@ -473,6 +466,7 @@ Content-Type: application/json
     }
   ]
 }
+EOF
 ```
 
 **Response:**
@@ -488,14 +482,14 @@ Content-Type: application/json
 }
 ```
 
-
-### List Teams
+#### List Teams Tool
 
 ```bash
-POST /notion/notion-get-teams
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-get-teams' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {}
+EOF
 ```
 
 **Response:**
@@ -511,13 +505,14 @@ Content-Type: application/json
 }
 ```
 
-### List Users
+#### List Users Tool
 
 ```bash
-POST /notion/notion-get-users
-Content-Type: application/json
-
+maton api -X POST '/notion/notion-get-users' \
+  -H 'Content-Type: application/json' \
+  --input - <<'EOF'
 {}
+EOF
 ```
 
 **Response:**
@@ -533,7 +528,7 @@ Content-Type: application/json
 }
 ```
 
-## Property Types
+### Property Types
 
 When creating or updating pages in databases:
 
@@ -553,7 +548,37 @@ When creating or updating pages in databases:
 
 **Note:** Properties named "id" or "url" must be prefixed with `userDefined:` (e.g., `"userDefined:URL"`).
 
-## Notes
+### Response Format
+
+All MCP tool responses wrap content in a `content` array of typed blocks alongside an `isError` flag. The `text` field is often JSON-stringified data that has to be parsed:
+
+```json
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"results\":[...],\"type\":\"workspace_search\"}"
+    }
+  ],
+  "isError": false
+}
+```
+
+Tool-level failures return HTTP 200 with `isError` set to `true` and the message in the same `content` array, so check `isError` rather than the HTTP status:
+
+```json
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "<error message>"
+    }
+  ],
+  "isError": true
+}
+```
+
+### Notes
 
 - All IDs are UUIDs (with or without hyphens)
 - Use `notion-fetch` to get page/database structure before creating or updating
@@ -561,9 +586,10 @@ When creating or updating pages in databases:
 - If multiple Notion connections exist, specify which to use with `Maton-Connection` header
 - Session can be reused by passing the `Mcp-Session-Id` header from previous responses
 
-## Resources
+### Resources
 
 - [Notion MCP Overview](https://developers.notion.com/guides/mcp)
-- [MCP Supported Tools](https://developers.notion.com/guides/mcp/mcp-supported-tools)
+- [Notion MCP Supported Tools](https://developers.notion.com/guides/mcp/mcp-supported-tools)
 - [Maton Community](https://discord.com/invite/dBfFAcefs2)
 - [Maton Support](mailto:support@maton.ai)
+- [Maton CLI Manual](https://cli.maton.ai/manual)

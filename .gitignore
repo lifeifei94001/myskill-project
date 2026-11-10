@@ -5,3 +5,7 @@ __pycache__/
 Thumbs.db
 *.tmp
 *.log
+.backup/
+.cache/
+.env
+.env.local

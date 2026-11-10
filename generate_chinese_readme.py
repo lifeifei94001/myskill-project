@@ -236,7 +236,17 @@ SKILLS_CHINESE_INFO = {
     "find-skills": {
         "title": "技能生态智能发现与推荐器",
         "category": "🤖 Agent 自我进化与管理",
-        "desc": "已全面升级：第一优先级检索本地 `VoltAgent/awesome-agent-skills`（1497+精选技能），未命中时回退到 Skills CLI 生态，提供一键安装指令。"
+        "desc": "已全面升级：第一优先级检索本地 `VoltAgent/awesome-agent-skills`（1497+精选技能），第二优先级检索 `prompts.chat` 社区技能与提示词库，未命中时回退到 Skills CLI 生态，提供一键安装指令。"
+    },
+    "prompt-lookup": {
+        "title": "prompts.chat 社区提示词检索与模板获取",
+        "category": "🤖 Agent 自我进化与管理",
+        "desc": "来自 `f/prompts.chat` 官方插件技能。通过 `prompts.chat` MCP（`search_prompts`、`get_prompt`）按关键词、类型与分类检索高质量提示词模板并支持 `${variable}` 变量填充。"
+    },
+    "skill-lookup": {
+        "title": "prompts.chat 社区技能发现与安装器",
+        "category": "🤖 Agent 自我进化与管理",
+        "desc": "来自 `f/prompts.chat` 官方插件技能。通过 `prompts.chat` MCP（`search_skills`、`get_skill`）或本地辅助脚本搜索并下载安装社区 Agent Skills。"
     },
     "skill-creator": {
         "title": "Agent Skill 专家级创建与优化工具",

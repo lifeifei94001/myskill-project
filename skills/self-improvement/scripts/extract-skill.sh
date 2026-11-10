@@ -6,7 +6,8 @@
 set -e
 
 # Configuration
-SKILLS_DIR="./skills"
+SKILLS_DIR="${SKILLS_DIR:-./skills}"
+TEMPLATE_DIR="$(dirname "$0")/../assets"
 
 # Colors for output
 RED='\033[0;31m'
@@ -25,13 +26,13 @@ Arguments:
 
 Options:
   --dry-run      Show what would be created without creating files
-  --output-dir   Relative output directory under current path (default: ./skills)
+  --output-dir   Override skills directory (default: ./skills)
   -h, --help     Show this help message
 
 Examples:
   $(basename "$0") docker-m1-fixes
   $(basename "$0") api-timeout-patterns --dry-run
-  $(basename "$0") pnpm-setup --output-dir ./skills/custom
+  $(basename "$0") pnpm-setup --output-dir /path/to/skills
 
 The skill will be created in: \$SKILLS_DIR/<skill-name>/
 EOF
@@ -60,11 +61,6 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --output-dir)
-            if [ -z "${2:-}" ] || [[ "${2:-}" == -* ]]; then
-                log_error "--output-dir requires a relative path argument"
-                usage
-                exit 1
-            fi
             SKILLS_DIR="$2"
             shift 2
             ;;
@@ -103,20 +99,6 @@ if ! [[ "$SKILL_NAME" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
     log_error "Examples: 'docker-fixes', 'api-patterns', 'pnpm-setup'"
     exit 1
 fi
-
-# Validate output path to avoid writes outside current workspace.
-if [[ "$SKILLS_DIR" = /* ]]; then
-    log_error "Output directory must be a relative path under the current directory."
-    exit 1
-fi
-
-if [[ "$SKILLS_DIR" =~ (^|/)\.\.(/|$) ]]; then
-    log_error "Output directory cannot include '..' path segments."
-    exit 1
-fi
-
-SKILLS_DIR="${SKILLS_DIR#./}"
-SKILLS_DIR="./$SKILLS_DIR"
 
 SKILL_PATH="$SKILLS_DIR/$SKILL_NAME"
 

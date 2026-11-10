@@ -1,22 +1,25 @@
-# Google Meet Routing Reference
+# Google Meet
+
+## API Reference
+
+> **Safety:** All write operations (POST, PUT, PATCH, DELETE) require explicit user confirmation before execution. Verify the target resource and intended effect with the user first. See the main [SKILL.md](../../SKILL.md#security--permissions) for full security policy.
 
 **App name:** `google-meet`
-**Base URL proxied:** `meet.googleapis.com`
+**Upstream base URL:** `meet.googleapis.com`
 
-## API Path Pattern
+Replace the upstream base URL with the app name. Everything after the base URL including query strings is kept as-is. Any account-specific part of the base URL and the API credentials are stored in the Maton connection, and the gateway injects both so requests never carry them. For example:
 
-```
-/google-meet/v2/{resource}
-```
+- Upstream: `https://meet.googleapis.com/v2/spaces`
+- Gateway: `https://api.maton.ai/google-meet/v2/spaces`
 
-## Common Endpoints
+### Spaces API
 
-### Create Space
+#### Create Space
+
 ```bash
-POST /google-meet/v2/spaces
-Content-Type: application/json
-
+maton api -X POST '/google-meet/v2/spaces' -H 'Content-Type: application/json' --input - <<'JSON'
 {}
+JSON
 ```
 
 Response:
@@ -32,86 +35,139 @@ Response:
 }
 ```
 
-### Get Space
+**Response:**
+
+#### Get Space
+
 ```bash
-GET /google-meet/v2/spaces/{spaceId}
+maton api '/google-meet/v2/spaces/{spaceId}'
 ```
 
-### Update Space
-```bash
-PATCH /google-meet/v2/spaces/{spaceId}
-Content-Type: application/json
+**Note:** `{spaceId}` is a placeholder. Replace it with a real value before sending the request.
 
+#### Update Space
+
+```bash
+maton api -X PATCH '/google-meet/v2/spaces/{spaceId}' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "config": {
     "accessType": "TRUSTED"
   }
 }
+JSON
 ```
 
-### End Active Call
+**Note:** `{spaceId}` is a placeholder. Replace it with a real value before sending the request.
+
+#### End Active Call
+
 ```bash
-POST /google-meet/v2/spaces/{spaceId}:endActiveConference
+maton api -X POST '/google-meet/v2/spaces/{spaceId}:endActiveConference'
 ```
 
-### List Conference Records
+**Note:** `{spaceId}` is a placeholder. Replace it with a real value before sending the request.
+
+### Conference Records API
+
+#### List Conference Records
+
 ```bash
-GET /google-meet/v2/conferenceRecords
+maton api '/google-meet/v2/conferenceRecords'
 ```
 
 With filter:
 ```bash
-GET /google-meet/v2/conferenceRecords?filter=space.name="spaces/abc123"
+maton api '/google-meet/v2/conferenceRecords?filter=space.name="spaces/abc123"'
 ```
 
-### Get Conference Record
+#### Get Conference Record
+
 ```bash
-GET /google-meet/v2/conferenceRecords/{conferenceRecordId}
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}'
 ```
 
-### List Participants
+**Note:** `{conferenceRecordId}` is a placeholder. Replace it with a real value before sending the request.
+
+### Participants API
+
+#### List Participants
+
 ```bash
-GET /google-meet/v2/conferenceRecords/{conferenceRecordId}/participants
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}/participants'
 ```
 
-### Get Participant
+**Note:** `{conferenceRecordId}` is a placeholder. Replace it with a real value before sending the request.
+
+#### Get Participant
+
 ```bash
-GET /google-meet/v2/conferenceRecords/{conferenceRecordId}/participants/{participantId}
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}/participants/{participantId}'
 ```
 
-### List Recordings
+**Note:** `{conferenceRecordId}` and `{participantId}` are placeholders. Replace each of them with real values before sending the request.
+
+### Participant Sessions API
+
+#### List Participant Sessions
+
 ```bash
-GET /google-meet/v2/conferenceRecords/{conferenceRecordId}/recordings
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}/participants/{participantId}/participantSessions'
 ```
 
-### Get Recording
+**Note:** `{conferenceRecordId}` and `{participantId}` are placeholders. Replace each of them with real values before sending the request.
+
+### Recordings API
+
+#### List Recordings
+
 ```bash
-GET /google-meet/v2/conferenceRecords/{conferenceRecordId}/recordings/{recordingId}
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}/recordings'
 ```
 
-### List Transcripts
+**Note:** `{conferenceRecordId}` is a placeholder. Replace it with a real value before sending the request.
+
+#### Get Recording
+
 ```bash
-GET /google-meet/v2/conferenceRecords/{conferenceRecordId}/transcripts
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}/recordings/{recordingId}'
 ```
 
-### Get Transcript
+**Note:** `{conferenceRecordId}` and `{recordingId}` are placeholders. Replace each of them with real values before sending the request.
+
+### Transcripts API
+
+#### List Transcripts
+
 ```bash
-GET /google-meet/v2/conferenceRecords/{conferenceRecordId}/transcripts/{transcriptId}
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}/transcripts'
 ```
 
-### List Transcript Entries
+**Note:** `{conferenceRecordId}` is a placeholder. Replace it with a real value before sending the request.
+
+#### Get Transcript
+
 ```bash
-GET /google-meet/v2/conferenceRecords/{conferenceRecordId}/transcripts/{transcriptId}/entries
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}/transcripts/{transcriptId}'
 ```
 
-## Notes
+**Note:** `{conferenceRecordId}` and `{transcriptId}` are placeholders. Replace each of them with real values before sending the request.
+
+#### List Transcript Entries
+
+```bash
+maton api '/google-meet/v2/conferenceRecords/{conferenceRecordId}/transcripts/{transcriptId}/entries'
+```
+
+**Note:** `{conferenceRecordId}` and `{transcriptId}` are placeholders. Replace each of them with real values before sending the request.
+
+### Notes
 
 - Spaces are persistent meeting rooms that can be reused
 - Conference records are created when a meeting starts and track meeting history
 - Access types: `OPEN` (anyone with link), `TRUSTED` (organization members only), `RESTRICTED` (invited only)
 - Recordings and transcripts require Google Workspace with recording enabled
 
-## Resources
+### Resources
 
 - [Google Meet API Overview](https://developers.google.com/meet/api/reference/rest)
 - [Spaces](https://developers.google.com/meet/api/reference/rest/v2/spaces)
@@ -119,3 +175,4 @@ GET /google-meet/v2/conferenceRecords/{conferenceRecordId}/transcripts/{transcri
 - [Participants](https://developers.google.com/meet/api/reference/rest/v2/conferenceRecords.participants)
 - [Recordings](https://developers.google.com/meet/api/reference/rest/v2/conferenceRecords.recordings)
 - [Transcripts](https://developers.google.com/meet/api/reference/rest/v2/conferenceRecords.transcripts)
+- [Maton CLI Manual](https://cli.maton.ai/manual)

@@ -1,47 +1,43 @@
-# Clio Routing Reference
+# Clio
+
+## API Reference
+
+> **Safety:** All write operations (POST, PUT, PATCH, DELETE) require explicit user confirmation before execution. Verify the target resource and intended effect with the user first. See the main [SKILL.md](../../SKILL.md#security--permissions) for full security policy.
+
+> **Privacy — this is a legal practice management system.** Matters, contacts, notes, communications, and documents here are client data, commonly covered by attorney-client privilege, legal professional privilege, or equivalent confidentiality duties. Mishandling it can cause real legal harm to the firm and its clients.
+> - Retrieve only the specific records the task requires. Do not bulk-export matters, contacts, or documents to "have context".
+> - **Never forward Clio data to a third-party host** — not to a trigger destination, webhook, external API, document-conversion service, or any non-`api.maton.ai` endpoint. Privileged material must not leave the firm's systems through this skill.
+> - Do not copy document contents, client identities, or matter details into summaries, logs, or files beyond what the user asked to see.
+> - Treat matter and contact identifiers as confidential; they map to real clients.
 
 **App name:** `clio`
-**Base URL proxied:** `app.clio.com`
+**Upstream base URL:** `app.clio.com`
 
-## API Path Pattern
+Replace the upstream base URL with the app name. Everything after the base URL including query strings is kept as-is. Any account-specific part of the base URL and the API credentials are stored in the Maton connection, and the gateway injects both so requests never carry them. For example:
 
-```
-/clio/api/v4/{resource}
-```
+- Upstream: `https://app.clio.com/api/v4/matters`
+- Gateway: `https://api.maton.ai/clio/api/v4/matters`
 
-## Field Selection
-
-By default, Clio returns minimal fields (`id`, `etag`). Always specify fields:
-
-```bash
-GET /clio/api/v4/matters?fields=id,display_number,description,status
-```
-
-Nested resources use curly bracket syntax:
-
-```bash
-GET /clio/api/v4/activities?fields=id,type,matter{id,description}
-```
-
-## Common Endpoints
-
-### Matters
+### Matters API
 
 #### List Matters
+
 ```bash
-GET /clio/api/v4/matters?fields=id,display_number,description,status
+maton api '/clio/api/v4/matters?fields=id,display_number,description,status,client_reference'
 ```
 
 #### Get Matter
+
 ```bash
-GET /clio/api/v4/matters/{id}?fields=id,display_number,description,status,open_date
+maton api '/clio/api/v4/matters/{id}?fields=id,display_number,description,status,open_date,close_date'
 ```
 
-#### Create Matter
-```bash
-POST /clio/api/v4/matters
-Content-Type: application/json
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
+#### Create Matter
+
+```bash
+maton api -X POST '/clio/api/v4/matters' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "description": "New Legal Matter",
@@ -49,145 +45,176 @@ Content-Type: application/json
     "client": {"id": 12345}
   }
 }
+JSON
 ```
 
 #### Update Matter
-```bash
-PATCH /clio/api/v4/matters/{id}
-Content-Type: application/json
 
+```bash
+maton api -X PATCH '/clio/api/v4/matters/{id}' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
-    "description": "Updated Description"
+    "description": "Updated Matter Description",
+    "status": "closed"
   }
 }
+JSON
 ```
+
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Delete Matter
+
 ```bash
-DELETE /clio/api/v4/matters/{id}
+maton api '/clio/api/v4/matters/{id}' -X DELETE
 ```
 
-### Contacts
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
+
+### Contacts API
 
 #### List Contacts
+
 ```bash
-GET /clio/api/v4/contacts?fields=id,name,type,primary_email_address
+maton api '/clio/api/v4/contacts?fields=id,name,type,primary_email_address,primary_phone_number'
 ```
 
 #### Get Contact
+
 ```bash
-GET /clio/api/v4/contacts/{id}?fields=id,name,type,first_name,last_name
+maton api '/clio/api/v4/contacts/{id}?fields=id,name,type,first_name,last_name,company'
 ```
 
-#### Create Contact (Person)
-```bash
-POST /clio/api/v4/contacts
-Content-Type: application/json
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
+#### Create Contact (Person)
+
+```bash
+maton api -X POST '/clio/api/v4/contacts' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "type": "Person",
     "first_name": "John",
-    "last_name": "Doe"
+    "last_name": "Doe",
+    "email_addresses": [
+      {"name": "Work", "address": "john@example.com", "default_email": true}
+    ]
   }
 }
+JSON
 ```
 
 #### Create Contact (Company)
-```bash
-POST /clio/api/v4/contacts
-Content-Type: application/json
 
+```bash
+maton api -X POST '/clio/api/v4/contacts' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "type": "Company",
     "name": "Acme Corporation"
   }
 }
+JSON
 ```
 
 #### Update Contact
-```bash
-PATCH /clio/api/v4/contacts/{id}
-Content-Type: application/json
 
+```bash
+maton api -X PATCH '/clio/api/v4/contacts/{id}' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "first_name": "Jane"
   }
 }
+JSON
 ```
+
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Delete Contact
+
 ```bash
-DELETE /clio/api/v4/contacts/{id}
+maton api '/clio/api/v4/contacts/{id}' -X DELETE
 ```
 
-### Activities
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
+
+### Activities API
 
 #### List Activities
+
 ```bash
-GET /clio/api/v4/activities?fields=id,type,date,quantity,matter{id,description}
+maton api '/clio/api/v4/activities?fields=id,type,date,quantity,matter{id,description}'
 ```
 
 #### Get Activity
+
 ```bash
-GET /clio/api/v4/activities/{id}?fields=id,type,date,quantity,note
+maton api '/clio/api/v4/activities/{id}?fields=id,type,date,quantity,note'
 ```
 
-#### Create Activity
-```bash
-POST /clio/api/v4/activities
-Content-Type: application/json
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
+#### Create Activity
+
+```bash
+maton api -X POST '/clio/api/v4/activities' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "type": "TimeEntry",
     "date": "2026-02-11",
     "quantity": 3600,
-    "matter": {"id": 12345}
+    "matter": {"id": 12345},
+    "note": "Legal research"
   }
 }
+JSON
 ```
 
 #### Update Activity
-```bash
-PATCH /clio/api/v4/activities/{id}
-Content-Type: application/json
 
+```bash
+maton api -X PATCH '/clio/api/v4/activities/{id}' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "note": "Updated note"
   }
 }
+JSON
 ```
+
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Delete Activity
+
 ```bash
-DELETE /clio/api/v4/activities/{id}
+maton api '/clio/api/v4/activities/{id}' -X DELETE
 ```
 
-### Tasks
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
+
+### Tasks API
 
 #### List Tasks
+
 ```bash
-GET /clio/api/v4/tasks?fields=id,name,status,due_at,priority
+maton api '/clio/api/v4/tasks?fields=id,name,status,due_at,priority,matter{id,description}'
 ```
 
 #### Get Task
+
 ```bash
-GET /clio/api/v4/tasks/{id}?fields=id,name,description,status,due_at
+maton api '/clio/api/v4/tasks/{id}?fields=id,name,description,status,due_at,priority'
 ```
+
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Create Task
 
-Requires `assignee` with `id` and `type`:
+Requires `assignee` with both `id` and `type` ("User" or "Contact"):
 
 ```bash
-POST /clio/api/v4/tasks
-Content-Type: application/json
-
+maton api -X POST '/clio/api/v4/tasks' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "name": "Review contract",
@@ -197,45 +224,53 @@ Content-Type: application/json
     "matter": {"id": 67890}
   }
 }
+JSON
 ```
 
 #### Update Task
-```bash
-PATCH /clio/api/v4/tasks/{id}
-Content-Type: application/json
 
+```bash
+maton api -X PATCH '/clio/api/v4/tasks/{id}' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "status": "complete"
   }
 }
+JSON
 ```
+
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Delete Task
+
 ```bash
-DELETE /clio/api/v4/tasks/{id}
+maton api '/clio/api/v4/tasks/{id}' -X DELETE
 ```
 
-### Calendar Entries
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
+
+### Calendar Entries API
 
 #### List Calendar Entries
+
 ```bash
-GET /clio/api/v4/calendar_entries?fields=id,summary,start_at,end_at
+maton api '/clio/api/v4/calendar_entries?fields=id,summary,start_at,end_at,matter{id,description}'
 ```
 
 #### Get Calendar Entry
+
 ```bash
-GET /clio/api/v4/calendar_entries/{id}?fields=id,summary,description,start_at,end_at
+maton api '/clio/api/v4/calendar_entries/{id}?fields=id,summary,description,start_at,end_at,location'
 ```
+
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Create Calendar Entry
 
 Requires `calendar_owner` with `id` and `type`:
 
 ```bash
-POST /clio/api/v4/calendar_entries
-Content-Type: application/json
-
+maton api -X POST '/clio/api/v4/calendar_entries' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
     "summary": "Client Meeting",
@@ -244,77 +279,98 @@ Content-Type: application/json
     "calendar_owner": {"id": 12345, "type": "User"}
   }
 }
+JSON
 ```
 
-**Note:** Associating a matter during creation may return 404. Use PATCH to link matters after creation.
+**Note:** Associating a matter with a calendar entry during creation may return a 404 error. To link a matter, update the calendar entry after creation using PATCH.
 
 #### Update Calendar Entry
-```bash
-PATCH /clio/api/v4/calendar_entries/{id}
-Content-Type: application/json
 
+```bash
+maton api -X PATCH '/clio/api/v4/calendar_entries/{id}' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "data": {
-    "summary": "Updated Meeting"
+    "summary": "Updated Meeting Title"
   }
 }
+JSON
 ```
+
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Delete Calendar Entry
+
 ```bash
-DELETE /clio/api/v4/calendar_entries/{id}
+maton api '/clio/api/v4/calendar_entries/{id}' -X DELETE
 ```
 
-### Documents
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
+
+### Documents API
 
 #### List Documents
+
 ```bash
-GET /clio/api/v4/documents?fields=id,name,content_type,size
+maton api '/clio/api/v4/documents?fields=id,name,content_type,size,matter{id,description}'
 ```
 
 #### Get Document
+
 ```bash
-GET /clio/api/v4/documents/{id}?fields=id,name,content_type,size,created_at
+maton api '/clio/api/v4/documents/{id}?fields=id,name,content_type,size,created_at'
 ```
+
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
 
 #### Download Document
+
+> **Privileged client material.** This returns the full contents of a legal document. Confirm the specific document and the reason with the user first. Do not save it outside the working directory the user specified, do not include its contents in output beyond what was asked, and never upload or forward it to any third-party host (including document-processing or conversion APIs).
+
 ```bash
-GET /clio/api/v4/documents/{id}/download
+maton api '/clio/api/v4/documents/{id}/download'
 ```
 
-### Users
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
+
+### Users API
 
 #### Get Current User
+
 ```bash
-GET /clio/api/v4/users/who_am_i?fields=id,name,email,enabled
+maton api '/clio/api/v4/users/who_am_i?fields=id,name,email,enabled'
 ```
 
 #### List Users
+
 ```bash
-GET /clio/api/v4/users?fields=id,name,email,enabled
+maton api '/clio/api/v4/users?fields=id,name,email,enabled,rate'
 ```
 
-### Bills
+### Bills API
 
 #### List Bills
+
 ```bash
-GET /clio/api/v4/bills?fields=id,number,issued_at,due_at,total,balance,state
+maton api '/clio/api/v4/bills?fields=id,number,issued_at,due_at,total,balance,state'
 ```
 
 #### Get Bill
-```bash
-GET /clio/api/v4/bills/{id}?fields=id,number,total,balance,state
-```
-
-## Pagination
-
-Clio uses cursor-based pagination:
 
 ```bash
-GET /clio/api/v4/matters?fields=id,description&limit=50
+maton api '/clio/api/v4/bills/{id}?fields=id,number,issued_at,due_at,total,balance,state'
 ```
 
-Response includes pagination in `meta`:
+**Note:** `{id}` is a placeholder. Replace it with a real value before sending the request.
+
+### Pagination
+
+Clio uses cursor-based pagination. Response includes pagination metadata:
+
+```bash
+maton api '/clio/api/v4/matters?fields=id,description&limit=50'
+```
+
+Response includes pagination info in the `meta` object:
 
 ```json
 {
@@ -322,32 +378,47 @@ Response includes pagination in `meta`:
   "meta": {
     "paging": {
       "next": "https://app.clio.com/api/v4/matters?page_token=xyz123"
-    }
+    },
+    "records": 50
   }
 }
 ```
 
-Use `page_token` for next page:
+Use the `page_token` parameter to fetch the next page:
 
 ```bash
-GET /clio/api/v4/matters?page_token=xyz123
+maton api '/clio/api/v4/matters?fields=id,description&page_token=xyz123'
 ```
 
-## Notes
+### Field Selection
 
-- Always specify `fields` parameter - defaults are minimal (`id`, `etag` only)
-- Nested resources use curly brackets: `matter{id,description}`
-- Only one level of nesting supported
+By default, Clio returns minimal fields (`id`, `etag`). Use the `fields` parameter to request specific fields:
+
+```bash
+maton api '/clio/api/v4/matters?fields=id,display_number,description,status'
+```
+
+For nested resources, use curly bracket syntax:
+
+```bash
+maton api '/clio/api/v4/activities?fields=id,type,matter{id,description}'
+```
+
+### Notes
+
+- Field selection is important - default responses only include `id` and `etag`
+- Nested resources use curly bracket syntax: `matter{id,description}`
+- Only one level of nesting is supported
 - Contact types: `Person` or `Company`
 - Task assignees require both `id` and `type` ("User" or "Contact")
-- Calendar entries require `calendar_owner` with `id` and `type`; linking matters during creation may fail - use PATCH after creation
+- Calendar entries require `calendar_owner` with `id` and `type`; associating a matter during creation may fail - use PATCH to link matters after creation
 - Activity quantity is in seconds (3600 = 1 hour)
-- Rate limit: 50 requests/minute during peak hours
-- Contact limits: max 20 emails, phones, and addresses each
-- Activities, Documents, and Bills endpoints require additional OAuth scopes
+- Contact records limited to 20 email addresses, phone numbers, and addresses each
+- Activities, Documents, and Bills endpoints require additional OAuth scopes beyond the basic integration
 
-## Resources
+### Resources
 
 - [Clio API Documentation](https://docs.developers.clio.com/api-reference/)
-- [Clio Fields Guide](https://docs.developers.clio.com/api-docs/clio-manage/fields/)
-- [Clio Rate Limits](https://docs.developers.clio.com/api-docs/clio-manage/rate-limits/)
+- [Fields Guide](https://docs.developers.clio.com/api-docs/clio-manage/fields/)
+- [Rate Limits](https://docs.developers.clio.com/api-docs/clio-manage/rate-limits/)
+- [Maton CLI Manual](https://cli.maton.ai/manual)

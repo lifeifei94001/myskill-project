@@ -1,49 +1,60 @@
-# Google Docs Routing Reference
+# Google Docs
+
+## API Reference
+
+> **Safety:** All write operations (POST, PUT, PATCH, DELETE) require explicit user confirmation before execution. Verify the target resource and intended effect with the user first. See the main [SKILL.md](../../SKILL.md#security--permissions) for full security policy.
 
 **App name:** `google-docs`
-**Base URL proxied:** `docs.googleapis.com`
+**Upstream base URL:** `docs.googleapis.com`
 
-## API Path Pattern
+Replace the upstream base URL with the app name. Everything after the base URL including query strings is kept as-is. Any account-specific part of the base URL and the API credentials are stored in the Maton connection, and the gateway injects both so requests never carry them. For example:
 
-```
-/google-docs/v1/documents/{documentId}
-```
+- Upstream: `https://docs.googleapis.com/v1/documents`
+- Gateway: `https://api.maton.ai/google-docs/v1/documents`
 
-## Common Endpoints
+### Documents API
 
-### Get Document
-```bash
-GET /google-docs/v1/documents/{documentId}
-```
-
-Example:
+#### Get Document
 
 ```bash
-maton google-docs document view DOC_ID            # human-readable summary (id, title, revision)
-maton google-docs document view DOC_ID --json     # full document payload (body, styles, etc.)
+maton google-docs document get {documentId}            # human-readable summary (id, title, revision)
+maton google-docs document get {documentId} --json     # full document payload (body, styles, etc.)
 ```
 
-### Create Document
+Or with `maton api`:
+
 ```bash
-POST /google-docs/v1/documents
-Content-Type: application/json
-
-{
-  "title": "New Document"
-}
+maton api '/google-docs/v1/documents/{documentId}'
 ```
 
-Example:
+**Note:** `{documentId}` is a placeholder. Replace it with a real value before sending the request.
+
+#### Create Document
 
 ```bash
 maton google-docs document create --title 'New Document'
 ```
 
-### Batch Update Document
-```bash
-POST /google-docs/v1/documents/{documentId}:batchUpdate
-Content-Type: application/json
+Or with `maton api`:
 
+```bash
+maton api -X POST '/google-docs/v1/documents' -H 'Content-Type: application/json' --input - <<'JSON'
+{
+  "title": "New Document"
+}
+JSON
+```
+
+#### Batch Update Document
+
+```bash
+maton google-docs document write {documentId} --text 'Hello, World!'
+```
+
+Or with `maton api`:
+
+```bash
+maton api -X POST '/google-docs/v1/documents/{documentId}:batchUpdate' -H 'Content-Type: application/json' --input - <<'JSON'
 {
   "requests": [
     {
@@ -54,17 +65,15 @@ Content-Type: application/json
     }
   ]
 }
+JSON
 ```
 
-Example:
+**Note:** `{documentId}` is a placeholder. Replace it with a real value before sending the request.
 
-```bash
-maton google-docs document write DOC_ID --text 'Hello, World!'
-```
+### Common BatchUpdate Requests
 
-## Common Requests for batchUpdate
+#### Insert Text
 
-### Insert Text
 ```json
 {
   "insertText": {
@@ -74,7 +83,8 @@ maton google-docs document write DOC_ID --text 'Hello, World!'
 }
 ```
 
-### Delete Content
+#### Delete Content
+
 ```json
 {
   "deleteContentRange": {
@@ -86,7 +96,8 @@ maton google-docs document write DOC_ID --text 'Hello, World!'
 }
 ```
 
-### Replace All Text
+#### Replace All Text
+
 ```json
 {
   "replaceAllText": {
@@ -99,7 +110,8 @@ maton google-docs document write DOC_ID --text 'Hello, World!'
 }
 ```
 
-### Insert Table
+#### Insert Table
+
 ```json
 {
   "insertTable": {
@@ -110,7 +122,8 @@ maton google-docs document write DOC_ID --text 'Hello, World!'
 }
 ```
 
-### Insert Inline Image
+#### Insert Inline Image
+
 ```json
 {
   "insertInlineImage": {
@@ -124,7 +137,8 @@ maton google-docs document write DOC_ID --text 'Hello, World!'
 }
 ```
 
-### Update Text Style
+#### Update Text Style
+
 ```json
 {
   "updateTextStyle": {
@@ -141,7 +155,8 @@ maton google-docs document write DOC_ID --text 'Hello, World!'
 }
 ```
 
-### Insert Page Break
+#### Insert Page Break
+
 ```json
 {
   "insertPageBreak": {
@@ -150,7 +165,7 @@ maton google-docs document write DOC_ID --text 'Hello, World!'
 }
 ```
 
-## Document Structure
+### Document Structure
 
 The document body contains:
 - `content` - Array of structural elements
@@ -158,18 +173,17 @@ The document body contains:
 - `body.content[].table` - Table element
 - `body.content[].sectionBreak` - Section break
 
-## Notes
+### Notes
 
-- Authentication is automatic - the router injects the OAuth token
 - Index positions are 1-based (document starts at index 1)
 - Use `endOfSegmentLocation` to append at end
 - Multiple requests in batchUpdate are applied atomically
 - Get document first to find correct indices for updates
 - The `fields` parameter in style updates uses field mask syntax
 
-## Resources
+### Resources
 
-- [API Overview](https://developers.google.com/docs/api/how-tos/overview)
+- [Google Docs API Overview](https://developers.google.com/docs/api/how-tos/overview)
 - [Get Document](https://developers.google.com/docs/api/reference/rest/v1/documents/get)
 - [Create Document](https://developers.google.com/docs/api/reference/rest/v1/documents/create)
 - [Batch Update](https://developers.google.com/docs/api/reference/rest/v1/documents/batchUpdate)

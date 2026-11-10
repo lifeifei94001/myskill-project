@@ -55,8 +55,17 @@ For example:
 - `python d:\APP\development_projects\awesome-agent-skills\search.py pr review`
 - `python d:\APP\development_projects\awesome-agent-skills\search.py testing`
 
-#### Priority 2: Fallback to Skills CLI
-If no suitable skill is found in `awesome-agent-skills`, fall back to searching the broader ecosystem via the CLI:
+#### Priority 2: Search `f/prompts.chat` Community Registry
+You can also search the open community skills & prompts registry at **[prompts.chat](https://prompts.chat/skills)** (`f/prompts.chat`):
+- Via `prompts.chat` MCP tools: `search_skills` and `get_skill`
+- Or via the workspace CLI helper (which installs directly to `d:\APP\development_projects\.agents\skills\<slug>`):
+```bash
+python d:\APP\development_projects\.agents\scripts\prompts_chat.py search-skills [query keywords...]
+python d:\APP\development_projects\.agents\scripts\prompts_chat.py install-skill <id_or_slug>
+```
+
+#### Priority 3: Fallback to Skills CLI
+If no suitable skill is found in `awesome-agent-skills` or `prompts.chat`, fall back to searching the broader ecosystem via the CLI:
 ```bash
 npx skills find [query]
 ```

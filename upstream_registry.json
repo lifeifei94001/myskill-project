@@ -1,0 +1,237 @@
+{
+  "_schema_version": "1.0",
+  "_description": "Upstream GitHub source registry for local Agent Skills in .agents/skills",
+  "bundle_repositories": {
+    "superpowers": {
+      "name": "obra/superpowers",
+      "repo_url": "https://github.com/obra/superpowers.git",
+      "branch": "main",
+      "skills_base_path": "skills",
+      "last_synced_sha": "22f0b463e7a5e579904dd6211a520321035526f7",
+      "skills": [
+        "brainstorming",
+        "diagnosing-superpowers",
+        "dispatching-parallel-agents",
+        "executing-plans",
+        "finishing-a-development-branch",
+        "receiving-code-review",
+        "requesting-code-review",
+        "subagent-driven-development",
+        "systematic-debugging",
+        "test-driven-development",
+        "using-git-worktrees",
+        "using-superpowers",
+        "verification-before-completion",
+        "writing-plans",
+        "writing-skills",
+        "superpowers"
+      ],
+      "last_updated_at": "2026-11-09 10:57:06"
+    },
+    "mattpocock_skills": {
+      "name": "mattpocock/skills",
+      "repo_url": "https://github.com/mattpocock/skills.git",
+      "branch": "main",
+      "skills_base_path": "skills",
+      "last_synced_sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
+      "skill_mapping": {
+        "ask-matt": "engineering/ask-matt",
+        "code-review": "engineering/code-review",
+        "codebase-design": "engineering/codebase-design",
+        "diagnosing-bugs": "engineering/diagnosing-bugs",
+        "domain-modeling": "engineering/domain-modeling",
+        "grill-with-docs": "engineering/grill-with-docs",
+        "implement-spec": "engineering/implement-spec",
+        "implement": "engineering/implement",
+        "improve-codebase-architecture": "engineering/improve-codebase-architecture",
+        "pr": "engineering/pr",
+        "prototype": "engineering/prototype",
+        "research": "engineering/research",
+        "retro": "engineering/retro",
+        "setup-matt-pocock-skills": "engineering/setup-matt-pocock-skills",
+        "tdd": "engineering/tdd",
+        "to-spec": "engineering/to-spec",
+        "to-tickets": "engineering/to-tickets",
+        "triage": "engineering/triage",
+        "wayfinder": "engineering/wayfinder",
+        "wizard": "engineering/wizard",
+        "chief-of-staff": "in-progress/chief-of-staff",
+        "claude-handoff": "in-progress/claude-handoff",
+        "loop-me": "in-progress/loop-me",
+        "setup-ts-deep-modules": "in-progress/setup-ts-deep-modules",
+        "software-factory": "in-progress/software-factory",
+        "writing-beats": "in-progress/writing-beats",
+        "writing-fragments": "in-progress/writing-fragments",
+        "writing-shape": "in-progress/writing-shape",
+        "git-guardrails-claude-code": "misc/git-guardrails-claude-code",
+        "migrate-to-shoehorn": "misc/migrate-to-shoehorn",
+        "scaffold-exercises": "misc/scaffold-exercises",
+        "setup-pre-commit": "misc/setup-pre-commit",
+        "grill-me": "productivity/grill-me",
+        "grilling": "productivity/grilling",
+        "handoff": "productivity/handoff",
+        "teach": "productivity/teach",
+        "to-questionnaire": "productivity/to-questionnaire",
+        "wait-what": "productivity/wait-what",
+        "writing-for-agents": "productivity/writing-for-agents",
+        "mattpocock-skills": "."
+      },
+      "last_updated_at": "2026-11-09 10:57:14"
+    },
+    "prompts_chat": {
+      "name": "f/prompts.chat",
+      "repo_url": "https://github.com/f/prompts.chat.git",
+      "branch": "main",
+      "skills_base_path": "plugins/claude/prompts.chat/skills",
+      "sparse": true,
+      "last_synced_sha": "44624eff85350b8a8c1cef048402496dad7a0dd5",
+      "skills": [
+        "prompt-lookup",
+        "skill-lookup"
+      ],
+      "last_updated_at": "2026-11-10 16:15:38"
+    }
+  },
+  "single_repositories": {
+    "spec-kit": {
+      "repo_url": "https://github.com/github/spec-kit.git",
+      "branch": "main",
+      "subpath": ".",
+      "last_synced_sha": "c43849408ac0de2ca6a52f14eaae71449776057b",
+      "last_updated_at": "2026-11-09 10:57:29"
+    },
+    "agent-browser": {
+      "repo_url": "https://github.com/vercel-labs/agent-browser.git",
+      "branch": "main",
+      "subpath": ".",
+      "last_synced_sha": "4b0e9f01fa8d214d39bbfe5391257640634fb9a0",
+      "last_updated_at": "2026-11-09 10:58:04"
+    },
+    "cocoloop": {
+      "repo_url": "https://github.com/CatREFuse/cocoloop.git",
+      "branch": "main",
+      "subpath": ".",
+      "last_synced_sha": "2af9bf64062c94d00c54dd12f8ccdfb0cd87369b",
+      "last_updated_at": "2026-11-09 10:58:08"
+    },
+    "antigravity-china-access": {
+      "repo_url": "https://github.com/Molly1116/Antigravity-China-Access.git",
+      "branch": "main",
+      "subpath": ".",
+      "last_synced_sha": "d404471dec1a6dcacaab03f7a7f8127ce08b799c",
+      "last_updated_at": "2026-11-09 10:58:11"
+    },
+    "API Gateway": {
+      "repo_url": "https://github.com/maton-ai/api-gateway-skill.git",
+      "branch": "main",
+      "subpath": ".",
+      "last_synced_sha": "4c943bbb11785255ba1979b58616061784f5e377",
+      "last_updated_at": "2026-11-09 10:58:29"
+    },
+    "life-decision-guide": {
+      "repo_url": "https://github.com/eternity4719/HowToLiveBetter.git",
+      "branch": "main",
+      "subpath": ".",
+      "last_synced_sha": "dff814dcbb0a2e968acc0af48e418814655ba1df",
+      "last_updated_at": "2026-11-09 10:59:07"
+    },
+    "Who Is Actor": {
+      "repo_url": "https://github.com/wscats/who-is-actor.git",
+      "branch": "main",
+      "subpath": ".",
+      "last_synced_sha": "ffe2ebbc18d17f8197c145c3baddca06b24785ca",
+      "last_updated_at": "2026-11-09 10:59:27"
+    },
+    "deploy-to-vercel": {
+      "repo_url": "https://github.com/vercel-labs/agent-skills.git",
+      "branch": "main",
+      "subpath": "skills/deploy-to-vercel",
+      "last_synced_sha": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
+      "last_updated_at": "2026-11-09 10:59:32"
+    },
+    "self-improvement": {
+      "repo_url": "https://github.com/pskoett/pskoett-ai-skills.git",
+      "branch": "main",
+      "subpath": "skills/self-improvement",
+      "last_synced_sha": "878b0e48bca74849c6219815882e75e60cfa2b72",
+      "last_updated_at": "2026-11-09 10:59:46"
+    },
+    "reverse-engineer-anything": {
+      "repo_url": "https://github.com/morluto/rea.git",
+      "branch": "main",
+      "subpath": ".agents/skills/reverse-engineer-anything",
+      "last_synced_sha": "c78c8aed403b955680a342f5ad38680867e3858f",
+      "last_updated_at": "2026-11-09 11:00:04"
+    },
+    "craft-anything": {
+      "repo_url": "https://github.com/saintedKyle/craft-anything-skill.git",
+      "branch": "main",
+      "subpath": "anywhere",
+      "last_synced_sha": "4ff4d0174ad172718ba733ab1b8692ba2f4a0fdd",
+      "last_updated_at": "2026-11-09 11:00:19"
+    }
+  },
+  "git_managed_skills": {
+    "anysearch": {
+      "local_path": "d:/APP/development_projects/.agents/skills/anysearch",
+      "remote": "origin",
+      "branch": "main"
+    },
+    "image-blaster": {
+      "local_path": "d:/APP/development_projects/.agents/skills/image-blaster",
+      "remote": "origin",
+      "branch": "main"
+    },
+    "awesome-agent-skills": {
+      "local_path": "d:/APP/development_projects/awesome-agent-skills",
+      "remote": "origin",
+      "branch": "main"
+    }
+  },
+  "protected_custom_skills": {
+    "golden-photo-retouch": {
+      "reason": "包含精调的P图防换人Prompt与.learnings铁律规则，严禁上游覆盖",
+      "protected": true
+    },
+    "aihuishou-pricing": {
+      "reason": "本地专属3C爱回收估价爬虫与逆向算法，严禁上游覆盖",
+      "protected": true
+    },
+    "samsung-tradein-pricing": {
+      "reason": "本地专属三星官网换新估价爬虫脚本，严禁上游覆盖",
+      "protected": true
+    },
+    "laptop-specs-collector": {
+      "reason": "本地专属二手笔记本回收参数收集与顿号格式化专家，严禁上游覆盖",
+      "protected": true
+    },
+    "data-code-expert": {
+      "reason": "定制的Vercel Serverless云端铁律与获奖级全栈代码规范，严禁上游覆盖",
+      "protected": true
+    },
+    "wechat-miniprogram-expert": {
+      "reason": "本地定制微信小程序双模架构与100%纯SVG矢量规范，严禁上游覆盖",
+      "protected": true
+    },
+    "ruoyi-shadcn-fullstack": {
+      "reason": "本地定制若依+Shadcn全栈脚手架生成规范，严禁上游覆盖",
+      "protected": true
+    },
+    "yudao-vben-admin-builder": {
+      "reason": "本地定制芋道源码+Vben 5企业级中后台规范，严禁上游覆盖",
+      "protected": true
+    },
+    "shadcn-admin": {
+      "reason": "本地定制的Shadcn Admin后台管理系统配置，严禁上游覆盖",
+      "protected": true
+    },
+    "moneyprinterturbo-video": {
+      "reason": "本地专属封装控制 MoneyPrinterTurbo 的 Agent 交互技能 (含 mpt_agent.py)，严禁上游软件仓库覆盖",
+      "protected": true
+    },
+    "huishoubao-pricing": {
+      "reason": "回收宝官方底层接口批量比价爬虫（SHA1加盐验签+过保完美自动对齐），严禁上游覆盖",
+      "protected": true
+    }
+  }
+}

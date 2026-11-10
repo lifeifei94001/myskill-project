@@ -1,100 +1,86 @@
 ---
-name: craft-anything
-description: Investigate how shipped software works (programs, apps, packages, firmware, web bundles) with evidence-backed answers through the Craft Anything MCP tools, keeping a durable brief, plan, hypotheses, findings and handoff in the project.
+name: craft-anything-anywhere
+description: Insert Craft Anything into any AI host (Qoder, Claude Code, OpenCode, Codex, Cursor, ...). Bootstraps the original unmodified craft-anything CLI/MCP, enables Deep mode with Ghidra (and IDA via REA when present), then reverse-engineers a target and recreates it. Use when the user wants to study or remake a shipped app, website or game from inside their own AI.
 metadata:
   version: "1"
+  upstream: https://github.com/storytold/craft-anything
 ---
 
-# Craft Anything: evidence-first investigation
+# Craft Anything, anywhere
 
-Use Craft Anything when an answer depends on something that was *built and shipped*: an executable, a
-library, an app bundle, an APK, an Electron app, a WebAssembly module, firmware, a crash dump or a
-network capture. If you have the source code and the question is about the source, read the source
-instead; that is faster and more direct.
+This is a thin, host-agnostic wrapper around the **original, unmodified** Craft Anything
+engine (MIT/Apache-2.0). It adds no engine code; it only installs, connects and orchestrates
+the upstream CLI + MCP server so any agent can drive it. Upstream behaviour, tools and
+evidence contract are authoritative; trust the live tool list over this file.
 
-## Connect only when you need it
+## 1. Bootstrap (once per machine)
 
-- If the `craft-anything` tools are already in your tool list, go straight to work. Don't run setup or
-  doctor first.
-- Trust the live tool list and its schemas over this file; the server may be newer or older.
-- If the tools are missing or failing to start, run `craft-anything-cli doctor` and then
-  `craft-anything-cli setup --dry-run` and show the user the plan before applying anything. After a
-  successful setup the user must restart or reconnect their app.
-- Only a small core toolset is listed at first. Call `list_toolsets` to see the others and
-  `enable_toolset` to switch one on (native code, Android, Apple, web, runtime…).
-- In Clean room (Deep mode off, the default) nothing inside a target is read: only the tools that
-  work from outside are listed, and others are refused with `details.reason` `clean_room`. Tell the
-  user the question needs Deep mode (the switch in the app, `settings_set deep_mode true`, or the
-  server started with `--deep`) instead of working around it.
+If `craft-anything-cli` is not on PATH, run the installer for your OS from this repo:
 
-## Working memory: keep it current
+- Windows: `powershell -ExecutionPolicy Bypass -File anywhere/install.ps1`
+- macOS/Linux: `bash anywhere/install.sh`
 
-Long investigations outlive any single context window. The project keeps a brief, plan, hypotheses,
-findings and a handoff note; use them every time.
+The installer downloads the official release CLI, runs `craft-anything-cli setup
+--all-detected --yes`, turns on Deep mode, points Ghidra at a local install when found,
+and copies the bundled skill into every known host skill directory. It never edits
+upstream source.
 
-1. **Start or resume.** Call `core_investigation_show` first. If there is a handoff, continue from it and
-   the plan instead of starting over. Also call `core_session_show` to see what is open.
-2. **New question?** Before any analysis call, write the brief with `core_brief_write` (the question, why
-   it's being asked, the targets, constraints such as "don't run the program", and what a finished
-   answer looks like) and an initial plan with `core_plan_update` (short numbered steps, each
-   `todo`/`doing`/`done`/`blocked` with a reason).
-3. **After each batch of tool calls:** update the plan's step status. When you form a claim worth
-   testing, `core_hypothesis_record` with the prediction that would confirm or refute it. When evidence
-   arrives, `core_hypothesis_update` (supported, refuted, abandoned) and attach the evidence ids.
-4. **When something is settled:** `core_finding_record` with the statement and at least one evidence id.
-   Findings are what reports are built from, never chat text.
-5. **At the end of every turn:** `core_handoff_write`: where things stand, what to do next, and traps to
-   avoid (dead ends, slow tools, misleading strings). Write it as if a stranger picks this up next.
-6. `core_journal_read` shows every earlier tool call and model turn when you need to know what was
-   already tried.
+Manual equivalent:
 
-## Method
+```sh
+craft-anything-cli setup --all-detected --yes
+craft-anything-cli settings_set --key deep_mode --value true
+craft-anything-cli settings_set --key engines.ghidra.install_dir --value '"<ghidra dir>"'
+```
 
-- **Observe, derive, infer, and say which.** Observed facts come straight from the bytes or a
-  capture. Derived facts are computed from observations (a control-flow graph, a call graph).
-  Inferences are judgment (names, intent, a model's reading). Label each claim accordingly.
-- **Cite evidence ids** (`ev_…`) for every claim. A claim with no evidence id is a hypothesis.
-- **Absence is not proof.** "No string found" or "no caller found" only covers what was searched.
-  State the search boundary and the coverage the tool reported, and record an unknown
-  (`core_unknown_add`) for anything that matters but is still open.
-- **Predict, then verify.** Before running a tool to test a hypothesis, write down what you expect to
-  see. If the result disagrees, update the hypothesis instead of explaining the result away.
-- **Summary first, then page.** Large results come back as a summary plus an evidence id. Ask for
-  pages (`offset`/`limit`) or the specific item you need instead of everything at once. Never repeat
-  an identical call that already succeeded or was rejected.
-- **Format-aware, not filename-aware.** Let the parsers tell you what a file is.
+After setup, restart/reconnect the host so its MCP tool list refreshes.
 
-## Where to start, by target
+## 2. Connect check
 
-| Target | First step |
-|---|---|
-| Native executable or library (ELF, PE, Mach-O) | `core_target_open`, then the overview, search and function tools |
-| Electron app, `.asar`, or a JavaScript bundle | `core_target_open` on the app or archive, then the JavaScript toolset |
-| Android APK / DEX | `core_target_open`, then the Android toolset |
-| .NET assembly | `core_target_open`, then the managed toolset |
-| WebAssembly, Go, PE resources, firmware, crash dumps | the formats toolset |
-| A live web page or Electron window | the browser toolset (observation only) |
-| Two versions of the same app | open both, then the application toolset's comparison tools |
+- If `craft-anything` (or `craft_anything`) MCP tools are in your tool list, go straight to work.
+- If absent: `craft-anything-cli doctor`, then `setup --dry-run`, show the plan, apply, restart.
+- Only a core toolset is listed first: `list_toolsets` then `enable_toolset` (native, web, Android...).
+- Deep mode off => Clean room: inside-the-target tools are refused with reason `clean_room`.
+  Enable Deep (`settings_set deep_mode true` or server `--deep`); do not work around it.
 
-If the user says "my app" without naming it, ask which one. Never guess with an example file.
+## 3. Engines: Ghidra and IDA
 
-## Consent and safety
+- **Ghidra** (Deep mode): set `engines.ghidra.install_dir` to a local Ghidra (e.g.
+  `.../ghidra_12.1.4_PUBLIC`) and `engines.ghidra.java_home` to a JDK. Verify with
+  `craft-anything-cli doctor` (`engine:ghidra => ok`). Craft Anything's built-in engines
+  still work without Ghidra; Ghidra only adds richer decompilation.
+- **IDA Pro**: Craft Anything does not drive IDA. When the user wants IDA, use the
+  companion `reverse-engineer-anything` (REA) MCP with `provider_id: "ida"` on the same
+  target, and treat its output as separate evidence. Do not claim Craft Anything used IDA.
 
-- Tools that run the target's code or change a connected device need the user's explicit OK. If a
-  call returns `consent_required`, explain what it would do and ask; never look for a way around it.
-- Static analysis never runs the target. Don't claim runtime behaviour from static evidence alone;
-  say it is inferred.
-- Never put secrets, cookies or personal data into notes, findings or handoffs.
+## 4. Study -> recreate workflow
 
-## When something fails
+1. Resolve the actual target (path or URL). If the user says "my app" without naming it, ask.
+2. Keep working memory: `core_investigation_show`, `core_brief_write`, `core_plan_update`;
+   record hypotheses/findings/handoff as upstream's skill describes.
+3. Open the target: `core_target_open`; enable the matching toolset; inspect with evidence ids.
+4. To recreate: `craft-anything-cli rebuild <target-or--> "<what to make>"` (or the MCP
+   rebuild workflow). It studies, builds with the host's coding agent, checks against the
+   original and refines. State the stack you want in the request.
+5. Cite evidence ids; label observed vs derived vs inferred; record unknowns; write handoff.
 
-| Error code | What to do |
-|---|---|
-| `not_found` | Open a target first (`core_target_open`), or check the path or name |
-| `feature_missing` / `engine_missing` | Read the remediation; it names the toolset, engine or setting needed |
-| `over_limit` | The result was too big to send; page it or read it by evidence id (`evidence://<id>` resource) |
-| `stale_revision` | Re-read with `core_investigation_show`, merge, retry |
-| `consent_required` | Ask the user |
+## 5. Consent and safety
 
-Before you finish: mark each plan step done or blocked, make sure every conclusion in your answer
-matches a recorded finding, list what is still unknown, and write the handoff.
+- Tools that run target code or change a device need explicit user OK (`consent_required`).
+- Only examine software you own or are permitted to examine; never bypass DRM/logins/anti-cheat.
+- Rebuilds recreate layout/style/behaviour from evidence; do not copy logos/photos/text
+  unless the user confirms ownership or permission.
+- Never put secrets or personal data into notes, findings or handoffs.
+
+## 6. Host install matrix
+
+| Host | Skill dir | MCP registration |
+|---|---|---|
+| Qoder | `~/.qoder/skills/craft-anything` | `~/.qoder/settings.json` mcpServers (setup) |
+| Claude Code | `~/.claude/skills/craft-anything` | `~/.claude.json` (setup) |
+| OpenCode | `~/.agents/skills/craft-anything` | `~/.config/opencode/opencode.json` (setup) |
+| Codex | `~/.codex/skills/craft-anything` | `~/.codex/config.toml` (setup) |
+| Cursor | `~/.cursor/skills/craft-anything` | `~/.cursor/mcp.json` (setup) |
+
+`setup --client <id>` handles detected hosts; the installer also copies the skill into
+undetected hosts' dirs so it is ready when they are installed.

@@ -2,9 +2,25 @@
 
 Corrections, insights, and knowledge gaps captured during development.
 
-**Categories**: correction | insight | knowledge_gap | best_practice
+**Categories**: correction | knowledge_gap | best_practice
 **Areas**: frontend | backend | infra | tests | docs | config
 **Statuses**: pending | in_progress | resolved | wont_fix | promoted | promoted_to_skill
+
+Every saved entry, including a one-off pending learning, includes:
+
+```markdown
+### Context Maintenance
+- Decay-Type: reality | decision | dependency | relevance | unknown
+- Decay-Rate: fast | medium | slow | durable | unknown (brief basis)
+- Authority: source or unknown; Owner: known role or unknown
+- Revalidation: method; invalidating triggers; when to check; unavailable-source behavior
+- Validation: pending | verified | unresolved; Last-Validated: date or none; Evidence: checked source or none
+- Disposition: unassessed | retain | revise | externalize | retire; Application: proposed | applied
+```
+
+Classify at capture; do not mark a claim verified merely because it was logged.
+Review unpromoted entries too. Review alone does not add recurrence or justify
+retirement. See `references/context-maintenance.md` in the self-improvement skill.
 
 ## Status Definitions
 
@@ -42,4 +58,3 @@ Docker build fails on Apple Silicon due to platform mismatch
 ```
 
 ---
-
