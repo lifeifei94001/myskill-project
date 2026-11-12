@@ -63,11 +63,8 @@ def _get_series_for_brand(brand_code: str) -> List[str]:
             return _CACHE_BRAND_SERIES[brand_code]
 
     url = f"{API_BASE}/tokocommercewebservices/v2/cn/tradeIn/services/filterDevicesV2?q=deviceType:1:brand:{brand_code}&mainProductCode={DEFAULT_RENEW_SKU}&provider={PROVIDER}"
-    try:
-        res = _http_get(url)
-        series_codes = [str(item.get("code")) for item in res.get("children", []) if item.get("code")]
-    except Exception:
-        series_codes = ["27_SE", "26_SE", "25_SE"] if brand_code == "10" else []
+    res = _http_get(url)
+    series_codes = [str(item.get("code")) for item in res.get("children", []) if item.get("code")]
 
     with _CACHE_LOCK:
         _CACHE_BRAND_SERIES[brand_code] = series_codes
@@ -82,11 +79,8 @@ def _get_models_for_series(brand_code: str, series_code: str) -> List[Dict[str, 
             return _CACHE_SERIES_MODELS[cache_key]
 
     url = f"{API_BASE}/tokocommercewebservices/v2/cn/tradeIn/services/filterDevicesV2?q=deviceType:1:brand:{brand_code}:series:{series_code}&mainProductCode={DEFAULT_RENEW_SKU}&provider={PROVIDER}"
-    try:
-        res = _http_get(url)
-        models = res.get("children", [])
-    except Exception:
-        models = []
+    res = _http_get(url)
+    models = res.get("children", [])
 
     with _CACHE_LOCK:
         _CACHE_SERIES_MODELS[cache_key] = models
@@ -592,8 +586,9 @@ def main():
 
     canary_ok, canary_msg = verify_canary()
     if not canary_ok:
-        print(f"⚠️ [警告] 接口健康检查异常：{canary_msg}", file=sys.stderr)
-        print("提示：官方后端接口或返回结构可能已调整，请谨慎采信以下结果！\n", file=sys.stderr)
+        print(f"❌ [中断] 接口健康检查失败：{canary_msg}", file=sys.stderr)
+        print("为避免污染历史基准或输出错误数据，已中止本次查询（本地日报与历史基准未被修改）。", file=sys.stderr)
+        sys.exit(1)
 
     device_list: List[Dict[str, str]] = []
 

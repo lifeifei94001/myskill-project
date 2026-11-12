@@ -5,6 +5,21 @@ description: "Query recycled phone and device buyback prices from Huishoubao (�
 
 # Huishoubao (回收宝) Device Pricing Skill
 
+## 0. ⚡ 新会话极速执行路径 (Fast-Path)
+
+当用户在新会话中要求**查询回收宝微信小程序（C 端散客，过保+完美不加券）价格**时，**禁止重复抓包或额外编写内存/参数测试脚本**，直接执行以下步骤即可在 **~1 分钟内**完成全部 18 款报价：
+
+1. 确认用户已在电脑微信中打开“回收宝”小程序（已登录即可，不需手动开启代理）；
+2. **直接运行一体化脚本**：
+   ```bash
+   python d:\APP\development_projects\evaluate_all_18_miniprogram.py
+   ```
+   - 脚本内置 `0.5 秒`极速微信进程 `token` & 版本号探测、本地问卷参数缓存（[`mp_params_cache.json`](file:///d:/APP/development_projects/.agents/skills/huishoubao-pricing/scripts/mp_params_cache.json)）以及当日结果断点续传；
+   - 默认不请求冗余查券接口，仅发起 18 次直连估价，约 **55~65 秒**一次性输出全部报价与 CSV/JSON 文件。
+3. （可选）仅校验新机型或更新问卷参数时使用：`python d:\APP\development_projects\evaluate_all_18_miniprogram.py --dry-run --refresh-params`（不消耗每日估价额度）。
+
+---
+
 ## 1. 概述与双渠道架构 (Overview & Dual-Channel Architecture)
 
 回收宝官方目前存在两套估价价格体系，价格差异显著：
@@ -37,7 +52,7 @@ description: "Query recycled phone and device buyback prices from Huishoubao (�
 ### 2.1 协议基础信息
 - **加盐密钥 (Secret)**: `'b7cab12b2b81385dd2cccb8ce67e4998'`
 - **AppID**: `wx8b5362b3e90cd150`
-- **版本号 (Version)**: `V5.17.15`
+- **版本号 (Version)**: 默认 `V5.17.16`（脚本运行时自动从 `WeChatAppEx.exe` 内存探测当前最新活跃版本与 `token`）
 - **平台标识 (Platform)**: `'2'`
 - **渠道商编号 (PID)**: `'1196'`
 - **网关主机**: `https://api.huishoubao.com`
@@ -82,9 +97,9 @@ headers = {
   - 接口层面：`api/product/evaluate` 仍返回 `_errCode: "0"`，但内容变为兜底报废响应 `evaluateid: "0", quotation: "5"`；
   - 小程序 UI 层面：页面带着 `evaluateid=0` 跳转到报价页后调用 `getEvaluateResult`，会触发弹窗报错 **`提示：参数evaluateid不能为空或者有误`**（即使手动操作小程序也会被拦截，单靠在 UI 内重新点击“查看预估价格”无法解除风控）；
 - **规避与恢复方式**：
-  - 请求间隔建议拉长至 **5~8 秒以上**，单日单账号分批控制查询量（建议单日不超过 10~15 次）；
+  - 请求间隔建议拉长至 **3.5~5 秒以上**，并在**仅查不加券纯本机价**时跳过冗余的 `getEvaluateResult` 请求、按 `productId` 缓存 `getEvaluateParam`，可将单次批量 18 款的请求总量减半（实测 **18/18 全部稳定通过**，未触发风控）；
   - 若当前账号已触发限制，需**切换另一个未受限的微信/手机号登录**，或等待服务端风控冷却（通常按自然日/24 小时重置）；
-- **增量断点续查机制**：评估脚本已内置持久化本地缓存（`huishoubao_miniprogram_prices_20261110.json`），已获取成功价格的机型自动跳过，绝不重复消耗配额。
+- **按日增量断点续查机制**：评估脚本内置按当日日期（`huishoubao_miniprogram_prices_<YYYYMMDD>.json`）的实时增量缓存，每评估完一款立即落盘，已成功获取今日报价的机型自动跳过，绝不混用往日价格或重复消耗配额。
 
 ---
 
@@ -95,5 +110,5 @@ headers = {
 python d:\APP\development_projects\evaluate_all_18_miniprogram.py
 ```
 - **输出成果**：
-  - JSON 结构化数据：`huishoubao_miniprogram_prices_20261110.json`
-  - 带 UTF-8 BOM 的 Excel 兼容比价表：`huishoubao_miniprogram_prices_20261110.csv`
+  - JSON 结构化数据：`huishoubao_miniprogram_prices_<YYYYMMDD>.json`
+  - 带 UTF-8 BOM 的 Excel 兼容比价表：`huishoubao_miniprogram_prices_<YYYYMMDD>.csv`

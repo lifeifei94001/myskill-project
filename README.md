@@ -1,11 +1,11 @@
 # 个人用技能库集合 (myskill-project)
 
 > **个人专属 Agent 技能库备份与跨设备同步中心**  
-> 本项目集中归档了本地使用的全部 **99 个 Agent Skills**。  
+> 本项目集中归档了本地使用的全部 **100 个 Agent Skills**。  
 > 无论是日常开发中的自动备份，还是换电脑时的一键恢复，都能确保 Antigravity、Claude Code、Cursor、Codex 等 AI 编程助手拥有完全一致的专家级能力。
 
-- **技能总数**：`99` 个技能
-- **最后更新时间**：`2026-11-10 18:02:37`
+- **技能总数**：`100` 个技能
+- **最后更新时间**：`2026-11-12 14:57:25`
 - **代码仓库**：[lifeifei94001/myskill-project](https://github.com/lifeifei94001/myskill-project)
 
 ---
@@ -190,13 +190,14 @@ npx skills add lifeifei94001/myskill-project --skill data-code-expert -g -y
 | 95 | **单图生成 3D 沉浸式世界与立体网格全能引擎**<br/>`image-blaster` | [image-blaster](./skills/image-blaster) | 仅需一张图片，依托 FAL 与 World Labs 模型生成完整 3D 环境空间、立体道具网格（Meshes）以及空间物理拟声音效。 |
 | 96 | **MoneyPrinterTurbo 全自动 AI 短视频生成官**<br/>`moneyprinterturbo-video` | [moneyprinterturbo-video](./skills/moneyprinterturbo-video) | harry0703 开源的现象级 AI 短视频生成工具官方技能。只需提供主题或脚本，全自动串联文案生成、AI 配音、高清素材检索、字幕对齐并合成导出高清 MP4 短视频。 |
 
-### 📦 其他自定义与扩展技能 (共 3 个)
+### 📦 其他自定义与扩展技能 (共 4 个)
 
 | # | 技能名称 | 目录链接 | 核心作用与能力详解 |
 |---|---|---|---|
 | 97 | **aihuishou-pricing**<br/>`aihuishou-pricing` | [aihuishou-pricing](./skills/aihuishou-pricing) | 个人自定义技能扩展模块。 |
-| 98 | **huishoubao-pricing**<br/>`huishoubao-pricing` | [huishoubao-pricing](./skills/huishoubao-pricing) | 个人自定义技能扩展模块。 |
-| 99 | **samsung-tradein-pricing**<br/>`samsung-tradein-pricing` | [samsung-tradein-pricing](./skills/samsung-tradein-pricing) | 个人自定义技能扩展模块。 |
+| 98 | **chuanban-antigravity-theme-patch**<br/>`chuanban-antigravity-theme-patch` | [chuanban-antigravity-theme-patch](./skills/chuanban-antigravity-theme-patch) | 个人自定义技能扩展模块。 |
+| 99 | **huishoubao-pricing**<br/>`huishoubao-pricing` | [huishoubao-pricing](./skills/huishoubao-pricing) | 个人自定义技能扩展模块。 |
+| 100 | **samsung-tradein-pricing**<br/>`samsung-tradein-pricing` | [samsung-tradein-pricing](./skills/samsung-tradein-pricing) | 个人自定义技能扩展模块。 |
 
 ---
 
