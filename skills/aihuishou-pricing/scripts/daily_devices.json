@@ -1,0 +1,20 @@
+[
+  { "name": "iPhone 17e", "model": "A3635", "capacity": "256G", "channel": "国行", "color": "白色" },
+  { "name": "iPhone 17e", "model": "A3635", "capacity": "512G", "channel": "国行", "color": "白色" },
+  { "name": "iPhone 16e", "model": "A3410", "capacity": "512G", "channel": "国行", "color": "黑色" },
+  { "name": "iPhone 16e", "model": "A3410", "capacity": "256G", "channel": "国行", "color": "黑色" },
+  { "name": "iPhone 16e", "model": "A3410", "capacity": "128G", "channel": "国行", "color": "黑色" },
+  { "name": "iPhone 15 Pro", "model": "A3104", "capacity": "128G", "channel": "国行", "color": "白色钛金属" },
+  { "name": "iPhone 15 Plus", "model": "A3096", "capacity": "512G", "channel": "国行", "color": "粉色" },
+  { "name": "iPhone 15", "model": "A3092", "capacity": "512G", "channel": "国行", "color": "粉色" },
+  { "name": "iPhone 14 Pro", "model": "A2892", "capacity": "512G", "channel": "国行", "color": "暗紫色" },
+  { "name": "iPhone 14 Plus", "model": "A2888", "capacity": "512G", "channel": "国行", "color": "午夜色" },
+  { "name": "iPhone 14", "model": "A2884", "capacity": "512G", "channel": "国行", "color": "午夜色" },
+  { "name": "iPhone 13 Pro", "model": "A2639", "capacity": "512G", "channel": "国行", "color": "石墨色" },
+  { "name": "iPhone 13", "model": "A2634", "capacity": "512G", "channel": "国行", "color": "粉色" },
+  { "name": "iPhone 13 mini", "model": "A2629", "capacity": "512G", "channel": "国行", "color": "粉色" },
+  { "name": "iPhone 12 mini", "model": "A2400", "capacity": "256G", "channel": "国行", "color": "黑色" },
+  { "name": "iPhone XS Max", "model": "A2104", "capacity": "512G", "channel": "国行", "color": "金色" },
+  { "name": "iPhone XS", "model": "A2100", "capacity": "512G", "channel": "国行", "color": "金色" },
+  { "name": "iPhone XR", "model": "A2108", "capacity": "256G", "channel": "国行", "color": "白色" }
+]

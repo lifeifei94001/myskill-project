@@ -1,0 +1,186 @@
+{
+  "date": "2026-11-16",
+  "condition": "过保+完美（纯物品估价/不加券）",
+  "quotes": {
+    "iPhone 17e|256G|国行|白色": {
+      "name": "iPhone 17e",
+      "model": "A3635",
+      "capacity": "256G",
+      "channel": "国行",
+      "color": "白色",
+      "matchedProductName": "苹果 iPhone 17e",
+      "price": 2180,
+      "inquiryKey": "202611161547166215"
+    },
+    "iPhone 17e|512G|国行|白色": {
+      "name": "iPhone 17e",
+      "model": "A3635",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "白色",
+      "matchedProductName": "苹果 iPhone 17e",
+      "price": 3360,
+      "inquiryKey": "202611161547199799"
+    },
+    "iPhone 16e|512G|国行|黑色": {
+      "name": "iPhone 16e",
+      "model": "A3410",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "黑色",
+      "matchedProductName": "苹果 iPhone 16e",
+      "price": 2630,
+      "inquiryKey": "202611161547223261"
+    },
+    "iPhone 16e|256G|国行|黑色": {
+      "name": "iPhone 16e",
+      "model": "A3410",
+      "capacity": "256G",
+      "channel": "国行",
+      "color": "黑色",
+      "matchedProductName": "苹果 iPhone 16e",
+      "price": 1740,
+      "inquiryKey": "202611161547256819"
+    },
+    "iPhone 16e|128G|国行|黑色": {
+      "name": "iPhone 16e",
+      "model": "A3410",
+      "capacity": "128G",
+      "channel": "国行",
+      "color": "黑色",
+      "matchedProductName": "苹果 iPhone 16e",
+      "price": 1460,
+      "inquiryKey": "202611161600076823"
+    },
+    "iPhone 15 Pro|128G|国行|白色钛金属": {
+      "name": "iPhone 15 Pro",
+      "model": "A3104",
+      "capacity": "128G",
+      "channel": "国行",
+      "color": "白色钛金属",
+      "matchedProductName": "苹果 iPhone 15 Pro",
+      "price": 2005,
+      "inquiryKey": "202611161600106008"
+    },
+    "iPhone 15 Plus|512G|国行|粉色": {
+      "name": "iPhone 15 Plus",
+      "model": "A3096",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "粉色",
+      "matchedProductName": "苹果 iPhone 15 Plus",
+      "price": 2240,
+      "inquiryKey": "202611161600137832"
+    },
+    "iPhone 15|512G|国行|粉色": {
+      "name": "iPhone 15",
+      "model": "A3092",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "粉色",
+      "matchedProductName": "苹果 iPhone 15",
+      "price": 2090,
+      "inquiryKey": "202611161600163099"
+    },
+    "iPhone 14 Pro|512G|国行|暗紫色": {
+      "name": "iPhone 14 Pro",
+      "model": "A2892",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "暗紫色",
+      "matchedProductName": "苹果 iPhone 14 Pro",
+      "price": 1730,
+      "inquiryKey": "202611161600195979"
+    },
+    "iPhone 14 Plus|512G|国行|午夜色": {
+      "name": "iPhone 14 Plus",
+      "model": "A2888",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "午夜色",
+      "matchedProductName": "苹果 iPhone 14 Plus",
+      "price": 1195,
+      "inquiryKey": "202611161607485082"
+    },
+    "iPhone 14|512G|国行|午夜色": {
+      "name": "iPhone 14",
+      "model": "A2884",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "午夜色",
+      "matchedProductName": "苹果 iPhone 14",
+      "price": 1195,
+      "inquiryKey": "202611161607532804"
+    },
+    "iPhone 13 Pro|512G|国行|石墨色": {
+      "name": "iPhone 13 Pro",
+      "model": "A2639",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "石墨色",
+      "matchedProductName": "苹果 iPhone 13 Pro",
+      "price": 1045,
+      "inquiryKey": "202611161607599513"
+    },
+    "iPhone 13|512G|国行|粉色": {
+      "name": "iPhone 13",
+      "model": "A2634",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "粉色",
+      "matchedProductName": "苹果 iPhone 13",
+      "price": 965,
+      "inquiryKey": "202611161608044055"
+    },
+    "iPhone 13 mini|512G|国行|粉色": {
+      "name": "iPhone 13 mini",
+      "model": "A2629",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "粉色",
+      "matchedProductName": "苹果 iPhone 13 mini",
+      "price": 780,
+      "inquiryKey": "202611161608091761"
+    },
+    "iPhone 12 mini|256G|国行|黑色": {
+      "name": "iPhone 12 mini",
+      "model": "A2400",
+      "capacity": "256G",
+      "channel": "国行",
+      "color": "黑色",
+      "matchedProductName": "苹果 iPhone 12 mini",
+      "price": 630,
+      "inquiryKey": "202611161608153558"
+    },
+    "iPhone XS Max|512G|国行|金色": {
+      "name": "iPhone XS Max",
+      "model": "A2104",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "金色",
+      "matchedProductName": "苹果 iPhone XS Max",
+      "price": 880,
+      "inquiryKey": "202611161608203315"
+    },
+    "iPhone XS|512G|国行|金色": {
+      "name": "iPhone XS",
+      "model": "A2100",
+      "capacity": "512G",
+      "channel": "国行",
+      "color": "金色",
+      "matchedProductName": "苹果 iPhone XS",
+      "price": 690,
+      "inquiryKey": "202611161608261130"
+    },
+    "iPhone XR|256G|国行|白色": {
+      "name": "iPhone XR",
+      "model": "A2108",
+      "capacity": "256G",
+      "channel": "国行",
+      "color": "白色",
+      "matchedProductName": "苹果 iPhone XR",
+      "price": 470,
+      "inquiryKey": "202611161608312676"
+    }
+  }
+}

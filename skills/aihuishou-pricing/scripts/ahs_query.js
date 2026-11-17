@@ -1,11 +1,56 @@
 /**
- * 爱回收极速批量查价脚本（纯底价 / 过保完美）
- * 运行环境：爱回收已打开的网页上下文（Edge / Chrome）
+ * 爱回收批量查价脚本（纯底价 / 过保完美）
+ * 运行环境：爱回收已打开的网页上下文（首选 Chrome，其次 Edge）
  * 传入参数：
  *   - items: [{ name, model, capacity, channel, color }]
- *   - skuCache: 可选静态参数缓存 { "机型|容量|渠道|颜色": { productId, matchedProductName, ppvIds } }
+ *   - skuCache: 静态参数缓存 { "机型|容量|渠道|颜色": { productId, matchedProductName, ppvIds } }
+ *   - options: { minIntervalMs?: number, maxItems?: number (默认 4；传 0 表示不限制), skipKeys?: string[], allowZoomMismatch?: boolean }
  */
-async function batchQueryAHS(items, skuCache = {}) {
+function preflightCheckAHS() {
+  const block = document.getElementById("waf_nc_block");
+  const wafBlocked = !!block && getComputedStyle(block).display !== "none";
+  const hasWebpack = Array.isArray(window.webpackChunkneom);
+  const zoomedOut = window.outerWidth > 0 && window.innerWidth > window.outerWidth;
+  const zoomRatioEstimate = window.innerWidth > 0 && window.outerWidth > 0
+    ? Number((window.outerWidth / window.innerWidth).toFixed(2))
+    : 1;
+  const blockReasons = [];
+  if (!hasWebpack) blockReasons.push("NO_WEBPACK_CONTEXT");
+  if (wafBlocked) blockReasons.push("WAF_BLOCKED");
+  if (zoomedOut) blockReasons.push("ZOOM_NOT_100_PERCENT");
+
+  return {
+    url: location.href,
+    hasWebpack,
+    webdriver: !!navigator.webdriver,
+    wafBlocked,
+    wafText: wafBlocked ? block.innerText : "",
+    innerSize: [window.innerWidth, window.innerHeight],
+    outerSize: [window.outerWidth, window.outerHeight],
+    devicePixelRatio: window.devicePixelRatio || 1,
+    zoomRatioEstimate,
+    zoomedOut,
+    ready: blockReasons.length === 0,
+    blockReasons
+  };
+}
+
+async function batchQueryAHS(items, skuCache = {}, options = {}) {
+  const preflight = preflightCheckAHS();
+  if (!preflight.hasWebpack) {
+    return [{ error: "NO_WEBPACK_CONTEXT", preflight }];
+  }
+  if (preflight.wafBlocked) {
+    return [{ error: "WAF_BLOCKED", wafBlocked: true, preflight }];
+  }
+  if (preflight.zoomedOut && !options.allowZoomMismatch) {
+    return [{
+      error: "ZOOM_NOT_100_PERCENT",
+      message: "检测到页面存在缩小缩放（innerWidth > outerWidth），请先在浏览器按 Ctrl+0 恢复 100% 缩放后再执行。",
+      preflight
+    }];
+  }
+
   let webpackRequire;
   window.webpackChunkneom.push([
     [Symbol()],
@@ -18,7 +63,20 @@ async function batchQueryAHS(items, skuCache = {}) {
   window.__ahsProductCache = window.__ahsProductCache || {};
   const productCache = window.__ahsProductCache;
 
-  const MIN_INTERVAL_MS = 2000;
+  const MIN_INTERVAL_MS = Number(options.minIntervalMs) > 0 ? Number(options.minIntervalMs) : 3000;
+  const MAX_ITEMS = options.maxItems === undefined ? 4 : Number(options.maxItems);
+  const skipSet = new Set(Array.isArray(options.skipKeys) ? options.skipKeys : []);
+
+  function buildCacheKey(item) {
+    const channel = item.channel || "国行";
+    const color = item.color || "标准色";
+    return `${item.name}|${item.capacity}|${channel}|${color}`;
+  }
+
+  let targetItems = items.filter((item) => !skipSet.has(buildCacheKey(item)));
+  if (MAX_ITEMS > 0) {
+    targetItems = targetItems.slice(0, MAX_ITEMS);
+  }
 
   function withTimeout(promise, ms, label) {
     return Promise.race([
@@ -33,32 +91,20 @@ async function batchQueryAHS(items, skuCache = {}) {
   }
 
   async function safeUg(productId, cityId, ppvIds) {
-    let imgCaptcha = undefined;
-    for (let attempt = 0; attempt < 5; attempt++) {
+    if (isWafBlocked()) throw new Error("WAF_BLOCKED");
+    try {
+      return await withTimeout(
+        mod13035.Ug({ productId, cityId, ppvIds }),
+        15000,
+        "Ug"
+      );
+    } catch (err) {
       if (isWafBlocked()) throw new Error("WAF_BLOCKED");
-      try {
-        return await withTimeout(
-          mod13035.Ug({ productId, cityId, ppvIds, imgCaptcha }),
-          15000,
-          "Ug"
-        );
-      } catch (err) {
-        if (isWafBlocked()) throw new Error("WAF_BLOCKED");
-        if ((err.code === 3001 || err.code === 3002) && err.data && err.data.captchaUrl) {
-          const ocrResp = await fetch("http://127.0.0.1:18888", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url: err.data.captchaUrl })
-          });
-          const ocrData = await ocrResp.json();
-          imgCaptcha = ocrData.code;
-          await new Promise(r => setTimeout(r, 300));
-          continue;
-        }
-        throw err;
+      if ((err?.code === 3001 || err?.code === 3002) && err?.data?.captchaUrl) {
+        throw new Error("CAPTCHA_REQUIRED");
       }
+      throw err;
     }
-    throw new Error("CAPTCHA_RETRY_EXHAUSTED");
   }
 
   function normalizeName(s) {
@@ -163,7 +209,7 @@ async function batchQueryAHS(items, skuCache = {}) {
   async function querySingle(item) {
     const channel = item.channel || "国行";
     const color = item.color || "标准色";
-    const cacheKey = `${item.name}|${item.capacity}|${channel}|${color}`;
+    const cacheKey = buildCacheKey(item);
     const cached = skuCache[cacheKey];
 
     let resolved = cached;
@@ -177,8 +223,12 @@ async function batchQueryAHS(items, skuCache = {}) {
     try {
       quote = await safeUg(resolved.productId, 103, resolved.ppvIds);
     } catch (err) {
-      // Self-heal if cached ppvIds ever go stale, but do not retry quota/WAF/timeout errors
-      const isQuotaOrBlock = err?.code === 12624008 || err?.message === "WAF_BLOCKED" || String(err?.message).startsWith("TIMEOUT:");
+      // Self-heal if cached ppvIds ever go stale, but do not retry quota/WAF/captcha/timeout errors
+      const isQuotaOrBlock =
+        err?.code === 12624008 ||
+        err?.message === "WAF_BLOCKED" ||
+        err?.message === "CAPTCHA_REQUIRED" ||
+        String(err?.message).startsWith("TIMEOUT:");
       if (fromCache && !isQuotaOrBlock) {
         fromCache = false;
         resolved = await resolvePpvIds(item);
@@ -203,17 +253,17 @@ async function batchQueryAHS(items, skuCache = {}) {
   }
 
   const results = [];
-  for (let i = 0; i < items.length; i++) {
+  for (let i = 0; i < targetItems.length; i++) {
     const tStart = Date.now();
     try {
-      results.push(await querySingle(items[i]));
+      results.push(await querySingle(targetItems[i]));
     } catch (e) {
       const errMsg = e?.message || e?.resultMessage || e?.msg || String(e);
-      results.push({ ...items[i], error: errMsg, errorCode: e?.code, wafBlocked: isWafBlocked() });
+      results.push({ ...targetItems[i], error: errMsg, errorCode: e?.code, wafBlocked: isWafBlocked() });
       break;
     }
     const elapsed = Date.now() - tStart;
-    if (i < items.length - 1 && elapsed < MIN_INTERVAL_MS) {
+    if (i < targetItems.length - 1 && elapsed < MIN_INTERVAL_MS) {
       await new Promise(r => setTimeout(r, MIN_INTERVAL_MS - elapsed));
     }
   }

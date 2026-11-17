@@ -1,14 +1,9 @@
 [CmdletBinding()]
 param(
-    [string]$ProxyConfigPath = ''
+    [string]$ProxyConfigPath = (Join-Path $PSScriptRoot 'proxy-config.psd1')
 )
 
 $ErrorActionPreference = 'Stop'
-
-if ([string]::IsNullOrWhiteSpace($ProxyConfigPath)) {
-    $scriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Definition }
-    $ProxyConfigPath = Join-Path $scriptDir 'proxy-config.psd1'
-}
 
 if (Test-Path -LiteralPath $ProxyConfigPath -PathType Leaf) {
     $proxyConfig = Import-PowerShellDataFile -LiteralPath $ProxyConfigPath
@@ -50,3 +45,4 @@ if (Test-Path -LiteralPath $officialShortcut -PathType Leaf) {
 } else {
     Start-Process -FilePath $antigravityExe -WorkingDirectory $antigravityDir
 }
+

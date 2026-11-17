@@ -26,14 +26,14 @@
         "writing-skills",
         "superpowers"
       ],
-      "last_updated_at": "2026-11-09 10:57:06"
+      "last_updated_at": "2026-11-17 17:15:33"
     },
     "mattpocock_skills": {
       "name": "mattpocock/skills",
       "repo_url": "https://github.com/mattpocock/skills.git",
       "branch": "main",
       "skills_base_path": "skills",
-      "last_synced_sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
+      "last_synced_sha": "5863806dd4e15c63174bee4e7515a4256792ecfa",
       "skill_mapping": {
         "ask-matt": "engineering/ask-matt",
         "code-review": "engineering/code-review",
@@ -76,7 +76,7 @@
         "writing-for-agents": "productivity/writing-for-agents",
         "mattpocock-skills": "."
       },
-      "last_updated_at": "2026-11-09 10:57:14"
+      "last_updated_at": "2026-11-17 17:15:44"
     },
     "prompts_chat": {
       "name": "f/prompts.chat",
@@ -84,12 +84,24 @@
       "branch": "main",
       "skills_base_path": "plugins/claude/prompts.chat/skills",
       "sparse": true,
-      "last_synced_sha": "44624eff85350b8a8c1cef048402496dad7a0dd5",
+      "last_synced_sha": "7aeb3e8ee4bd423dbf314b8641f15b5bf28ccba6",
       "skills": [
         "prompt-lookup",
         "skill-lookup"
       ],
-      "last_updated_at": "2026-11-10 16:15:38"
+      "last_updated_at": "2026-11-17 17:16:01"
+    },
+    "modern_web_guidance": {
+      "name": "GoogleChrome/modern-web-guidance",
+      "repo_url": "https://github.com/GoogleChrome/modern-web-guidance.git",
+      "branch": "main",
+      "skills_base_path": "skills",
+      "last_synced_sha": "64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65",
+      "skills": [
+        "modern-web-guidance",
+        "chrome-extensions"
+      ],
+      "last_updated_at": "2026-11-17 17:16:11"
     }
   },
   "single_repositories": {
@@ -97,78 +109,78 @@
       "repo_url": "https://github.com/github/spec-kit.git",
       "branch": "main",
       "subpath": ".",
-      "last_synced_sha": "c43849408ac0de2ca6a52f14eaae71449776057b",
-      "last_updated_at": "2026-11-09 10:57:29"
+      "last_synced_sha": "e210504aa09c9273a38bba665b12b8088468c96f",
+      "last_updated_at": "2026-11-17 17:16:57"
     },
     "agent-browser": {
       "repo_url": "https://github.com/vercel-labs/agent-browser.git",
       "branch": "main",
       "subpath": ".",
-      "last_synced_sha": "4b0e9f01fa8d214d39bbfe5391257640634fb9a0",
-      "last_updated_at": "2026-11-09 10:58:04"
+      "last_synced_sha": "b06e2533ba9b3823b8a96c859d455cb55f4d7893",
+      "last_updated_at": "2026-11-17 17:17:14"
     },
     "cocoloop": {
       "repo_url": "https://github.com/CatREFuse/cocoloop.git",
       "branch": "main",
       "subpath": ".",
       "last_synced_sha": "2af9bf64062c94d00c54dd12f8ccdfb0cd87369b",
-      "last_updated_at": "2026-11-09 10:58:08"
+      "last_updated_at": "2026-11-17 17:17:18"
     },
     "antigravity-china-access": {
       "repo_url": "https://github.com/Molly1116/Antigravity-China-Access.git",
       "branch": "main",
       "subpath": ".",
       "last_synced_sha": "d404471dec1a6dcacaab03f7a7f8127ce08b799c",
-      "last_updated_at": "2026-11-09 10:58:11"
+      "last_updated_at": "2026-11-17 17:17:23"
     },
     "API Gateway": {
       "repo_url": "https://github.com/maton-ai/api-gateway-skill.git",
       "branch": "main",
       "subpath": ".",
       "last_synced_sha": "4c943bbb11785255ba1979b58616061784f5e377",
-      "last_updated_at": "2026-11-09 10:58:29"
+      "last_updated_at": "2026-11-17 17:17:45"
     },
     "life-decision-guide": {
       "repo_url": "https://github.com/eternity4719/HowToLiveBetter.git",
       "branch": "main",
       "subpath": ".",
-      "last_synced_sha": "dff814dcbb0a2e968acc0af48e418814655ba1df",
-      "last_updated_at": "2026-11-09 10:59:07"
+      "last_synced_sha": "49fceab4254c8c2df0f7cdb1b2959cab6c451b96",
+      "last_updated_at": "2026-11-17 17:18:12"
     },
     "Who Is Actor": {
       "repo_url": "https://github.com/wscats/who-is-actor.git",
       "branch": "main",
       "subpath": ".",
       "last_synced_sha": "ffe2ebbc18d17f8197c145c3baddca06b24785ca",
-      "last_updated_at": "2026-11-09 10:59:27"
+      "last_updated_at": "2026-11-17 17:18:20"
     },
     "deploy-to-vercel": {
       "repo_url": "https://github.com/vercel-labs/agent-skills.git",
       "branch": "main",
       "subpath": "skills/deploy-to-vercel",
       "last_synced_sha": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
-      "last_updated_at": "2026-11-09 10:59:32"
+      "last_updated_at": "2026-11-17 17:18:26"
     },
     "self-improvement": {
       "repo_url": "https://github.com/pskoett/pskoett-ai-skills.git",
       "branch": "main",
       "subpath": "skills/self-improvement",
       "last_synced_sha": "878b0e48bca74849c6219815882e75e60cfa2b72",
-      "last_updated_at": "2026-11-09 10:59:46"
+      "last_updated_at": "2026-11-17 17:18:33"
     },
     "reverse-engineer-anything": {
       "repo_url": "https://github.com/morluto/rea.git",
       "branch": "main",
       "subpath": ".agents/skills/reverse-engineer-anything",
-      "last_synced_sha": "c78c8aed403b955680a342f5ad38680867e3858f",
-      "last_updated_at": "2026-11-09 11:00:04"
+      "last_synced_sha": "e9c72dbd1fa6b318cb3e455c92df064eed62333a",
+      "last_updated_at": "2026-11-17 17:18:57"
     },
     "craft-anything": {
       "repo_url": "https://github.com/saintedKyle/craft-anything-skill.git",
       "branch": "main",
       "subpath": "anywhere",
       "last_synced_sha": "4ff4d0174ad172718ba733ab1b8692ba2f4a0fdd",
-      "last_updated_at": "2026-11-09 11:00:19"
+      "last_updated_at": "2026-11-17 17:19:12"
     }
   },
   "git_managed_skills": {

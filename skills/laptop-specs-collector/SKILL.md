@@ -1,57 +1,27 @@
 ---
 name: laptop-specs-collector
-description: "Use when the user requests comprehensive laptop specifications, real in-sale SKUs, exact launch dates, or standard white-background product catalog images for 3C model entry, second-hand recycling, and cataloging. Returns official white-background photos (1 front-facing unfolded view + 1 rear/side view) alongside zero-hallucination real SKU tables (CPU × RAM × GPU × SSD × HDD) and entry shortcut panels. Triggers on: '收集笔记本参数', '查笔记本配置', '笔记本配置组合', '二手电脑回收参数', '提取电脑配置', '新建机型参数', '找笔记本图片', '笔记本白底图', '笔记本机型建档', '笔记本参数和图片', '拯救者配置', '查笔记本图片', '笔记本黄金组合'."
+description: "Use when the user requests comprehensive laptop specifications, real in-sale SKUs, and exact launch dates for 3C model entry, second-hand recycling, and cataloging. Returns zero-hallucination real SKU tables (CPU × RAM × GPU × SSD × HDD), exact release/first-sale dates, and backend entry shortcut panels without scraping or returning product images. Triggers on: '收集笔记本参数', '查笔记本配置', '笔记本配置组合', '二手电脑回收参数', '提取电脑配置', '新建机型参数', '笔记本机型建档', '拯救者配置', '笔记本参数'."
 ---
 
-# 笔记本全能建档与规格专家 (Laptop Specs & White-Background Images Collector)
-> **黄金组合 (Golden Combo)**：**官方标准白底双图** + **官方真实在售配置表** + **精确上市时间** + **后台录入卡片** 四位一体同步交付。
+# 笔记本全能建档与规格专家 (Laptop Specs Collector)
+> **三位一体交付**：**官方真实在售配置表** + **精确上市时间** + **后台录入卡片** 同步交付。（本技能**不检索、不抓取、不输出产品图片**，图片由用户自行采集。）
 
 ---
 
 ## 一、 何时使用
 
-- 用户输入笔记本机型名称，要求查找该机型的参数配置或机型图片；
+- 用户输入笔记本机型名称，要求查找该机型的参数配置与真实在售组合；
 - 3C 二手回收平台（爱回收、转转、找靓机等）或电商后台进行机型新建建档录入；
-- 需要同时获取**官方高清白底产品展示图（正视图 + 背/侧视图）**与**官方在售的真实完整 SKU 组合**；
+- 需要获取**官方在售的真实完整 SKU 组合**与**后台录入快捷面板**；
 - 校验某机型上市时间（发布日期、首销日期精确到年月日）与硬件字典。
 
 ---
 
-## 二、 黄金组合核心资产规范与质检铁律
+## 二、 核心资产规范与质检铁律
 
-输出必须成套交付四大资产，严禁缺失任何一部分：
+输出必须成套交付三大资产，严禁缺失任何一部分（**严禁额外爬取或输出图片**）：
 
-### 资产 1：官方标准白底建档图（固定且必须交付 2 张）
-
-必须严格依照以下标准检索并交付两张标准白底图：
-1. **图 1：正视展开完整白底图 (Front-facing Open View)**：
-   - **视角**：屏幕直视展开（约 90°~100° 正面直视视角）；
-   - **画面元素**：完整呈现 B 面屏幕（点亮官方壁纸或纯白屏）与 C 面键盘掌托，机身完整居中，**严禁边缘裁切**；
-   - **背景要求**：纯白底（RGB 接近 255,255,255），无杂乱阴影。
-2. **图 2：背面/斜侧展开完整白底图 (Rear Three-Quarter / Back View)**：
-   - **视角**：斜后视约 30°~45° 俯角展示；
-   - **画面元素**：A 面顶盖完整展示品牌与系列 LOGO（如 `LEGION`、`ROG`、`ThinkPad` 等）、转轴造型、后侧出风口散热格栅与机身边缘线条；
-   - **背景要求**：纯白底，清晰无遮挡。
-
-#### 图像精准直出模板与硬性渲染规范（严禁留白占位）：
-- 🖼️ **必须渲染真实图片**：必须在表格中真实渲染出正视图与背视图，**严禁输出 `(请直达官方图库查看)` 这种无画面占位符！**
-- 🎯 **一发命中的真实图片搜索公式**：
-  检索图片时，直接使用官方资产库定向指令：
-  `search_web(query='"{机型名称}" (site:consumer.huawei.com OR site:psrefstuff.lenovo.com OR site:notebookcheck.net OR site:lenovo.com) (".png" OR ".jpg")')`
-  该公式能 1 秒内直接命中原厂真实白底 `.png`/`.jpg` 资源（如华为 DAM 规格图、联想 PSREF 渲染图、Notebookcheck 官方图库），直接出图，无需翻找！
-- ❌ **绝对严禁正视展开图与背面/斜侧展开图使用同一张图片**：图 1 必须呈现正面 B/C 面，图 2 必须呈现 A 面顶盖或后侧出风口/接口，两张图的视角与画面要素绝对不可重复！严禁拿正面图当背面图充数；
-- 🛡️ **强制添加 `referrerpolicy="no-referrer"`**：所有 `<img src="..." />` 标签必须附带 `referrerpolicy="no-referrer"`，跨域直显；
-- 🔗 **官方图库链接必须稳定（严禁 503 报错）**：严禁猜写易被防火墙 503 拦截的第三方页面。官方直达链接优先提供品牌官网产品详情页（如 `https://consumer.huawei.com/cn/laptops/` 或 `https://shop.lenovo.com.cn/`），确保用户点击 100% 可访问。
-
-#### 极速执行与防死循环铁律（严格 2 次搜索上限，3~5 秒极速返回）：
-- ⏱️ **硬性熔断机制（严禁死循环搜图）**：全过程最多只允许调用 **2 次** `search_web`（第 1 次查配置参数与上市时间，第 2 次查官方图库与图片链接）。**绝对禁止为了强求单张 `.jpg` 直链而连续递归搜索几十次！** 若第 2 次未直接拿到 CDN 单图文件，立即采用该机型的【官方图库与商城专区直达页】（如 ZOL 图库 `https://detail.zol.com.cn/notebook/indexXXXX.shtml` 或品牌官网专区），立即停止一切搜索，直接交付！
-- ⚡ **唯一合法网络检索工具**：必须且仅使用宿主原生 `search_web` 工具检索数据（每次仅需 1~2 秒，稳定无阻塞，永不超时）；
-- 🚫 **严禁在终端中运行网络抓取命令**：绝对禁止在终端里执行 `python tavily_search.py`、`agent-browser open` 或命令行启动 Chrome 浏览器。因为终端沙箱无公网权限，外部网络连接会无限挂起，导致长达 10 分钟以上的严重卡死超时；
-- 🛠️ **本地工具严格轻量化**：本地 `scripts/format_specs.py` 仅作为纯本地文本排版工具（耗时 0.05 秒），零网络依赖。
-
----
-
-### 资产 2：官方真实在售 SKU 配置表（真实性第一铁律）
+### 资产 1：官方真实在售 SKU 配置表（真实性第一铁律）
 
 1. **组合真实存在且精准（零幻觉）**：
    - 必须保证表格中列出的**每一个配置组合均为官方真实发售的独立 SKU**；
@@ -65,38 +35,31 @@ description: "Use when the user requests comprehensive laptop specifications, re
 
 ---
 
-### 资产 3：上市时间说明（精确到年月日）
+### 资产 2：上市时间说明（精确到年月日）
 
 - 发布日期与首销日期必须精确到 **YYYY年MM月DD日**（如 `2026年05月19日`），严禁仅填写年份或年月；
 - 若发布即全面开售，首销日期填写同年月日并注明 `发布即首销`。
 
 ---
 
-### 资产 4：后台录入快捷面板（从真实 SKU 与图片逆向提取）
+### 资产 3：后台录入快捷面板（从真实 SKU 逆向提取）
 
 - 将已核验的真实 SKU 进行属性去重，顿号分隔；
-- 包含【建档白底图】正视展开图与背面斜侧图直链，可一键复制录入后台系统。
+- 仅输出品牌、别名、发布/首销时间与五大硬件属性（CPU、运存、显卡、固态硬盘、机械硬盘）及 SKU 统计，不包含图片链接，方便一键复制录入后台系统。
+
+---
+
+#### 极速执行与防卡死铁律（3 秒极速返回）：
+- ⚡ **唯一合法网络检索工具**：必须且仅使用宿主原生 `search_web` 工具检索规格与上市时间（每次仅需 1~2 秒，稳定无阻塞，永不超时）；
+- 🚫 **不爬图原则**：全程**禁止**执行图片搜索、图库抓取或输出图片 HTML/URL；
+- 🚫 **严禁在终端中运行网络抓取命令**：绝对禁止在终端里执行 `python tavily_search.py`、`agent-browser open` 或命令行启动 Chrome 浏览器。因为终端沙箱无公网权限，外部网络连接会无限挂起，导致长达 10 分钟以上的严重卡死超时；
+- 🛠️ **本地工具严格轻量化**：本地 `scripts/format_specs.py` 仅作为纯本地文本排版工具（耗时 0.05 秒），零网络依赖。
 
 ---
 
 ## 三、 输出规范与字段标准
 
-### 1. 官方标准白底建档图模块
-
-```markdown
-### 一、 官方标准白底建档图（展示配色：冰魄白）
-
-| 视图类型 | 画面预览 | 来源渠道 | 高清图原链 | 官方图库直达 |
-|:---:|:---:|:---:|:---|:---|
-| **正视展开完整白底图** | <img src="URL1" referrerpolicy="no-referrer" width="280" alt="正视展开图" /> | 品牌官方商城 | [点击查看原图](URL1) | [官方图库/商详情直达](GALLERY_URL) |
-| **背面/斜侧展开完整白底图** | <img src="URL2" referrerpolicy="no-referrer" width="280" alt="背面斜侧图" /> | 中关村在线 (ZOL) | [点击查看原图](URL2) | [官方图库/商详情直达](GALLERY_URL) |
-
-> **图片防盗链与真伪说明**：
-> 1. 已启用 `referrerpolicy="no-referrer"` 穿透防盗链限制，可在各主流浏览器直接预览；
-> 2. 严禁捏造或拼接虚拟图片路径。若遇跨域策略阻拦，可直接点击【官方图库直达】一键查看与另存原厂素材。
-```
-
-### 2. 核心在售组合表格（固定 8 列，顺序严禁修改）
+### 1. 核心在售组合表格（固定 8 列，顺序严禁修改）
 
 | 序号 | 字段名 | 填写规范 |
 |:---:|:---|:---|
@@ -111,23 +74,19 @@ description: "Use when the user requests comprehensive laptop specifications, re
 
 *注：表格中空值统一使用 `空` 占位，严禁使用“无”、“/”、“-”、“—”等其他占位符。*
 
-### 3. 上市时间说明（表格后单独输出）
+### 2. 上市时间说明（表格后单独输出）
 
 | 批次 | 发布日期 | 首销日期 | 版本差异说明 |
 |:---|:---|:---|:---|
 | 首发批次 | YYYY年MM月DD日 | YYYY年MM月DD日 | 首发覆盖平台与配色差异说明；无差异填 `空` |
 
-### 4. 后台录入快捷面板模板
+### 3. 后台录入快捷面板模板
 
 ```text
 ════════════════════════════════════════════════════════════
 【品牌名称】：联想
 【机型别名】：拯救者 Y9000P 2026
 【发布时间】：2026年05月19日（首销：2026年05月19日）
-────────────────────────────────────────────────────────────
-【建档白底图】：
-- 正视展开图：https://.../front.jpg
-- 背面斜侧图：https://.../rear.jpg
 ────────────────────────────────────────────────────────────
 【处理器 CPU】 (顿号分隔)：
 Intel Core Ultra 9 290HX Plus、Intel Core i9-14900HX
@@ -149,30 +108,26 @@ RTX5060 8GB、RTX5070 12GB
 
 ---
 
-## 四、 3秒极速执行工作流（严格 2 步搜索熔断）
+## 四、 3秒极速执行工作流
 
 ```
 ① 解析机型名称与版本边界（未指定默认标准版）
        │
        ▼
-② 原生 `search_web` 查真实在售 SKU 与上市时间（第 1 次搜索，耗时 1.5 秒）
+② 原生 `search_web` 查真实在售 SKU 与上市时间（耗时 1.5 秒）
+       │（如部分细节缺失，最多补充 1 次参数检索，严禁搜图）
+       ▼
+③ 离线调用 `scripts/format_specs.py` 完成排版（0.05 秒）
        │
        ▼
-③ 原生 `search_web` 查官方白底双图或图库直达链接（第 2 次搜索，耗时 1.5 秒）
-       │（立即终止所有后续网络检索，严禁死循环找 .jpg 文件名！）
-       ▼
-④ 离线调用 `scripts/format_specs.py` 完成排版（0.05 秒）
-       │
-       ▼
-⑤ 交付四位一体黄金组合成果（总耗时 3~5 秒，绝不卡死）
+④ 交付三位一体规格建档成果（总耗时 2~4 秒，绝不卡死）
 ```
 
 ---
 
 ## 五、 配套脚本与参考文档
 
-- **工具链与插件协同**：`references/toolchain_integration.md`（联动 Tavily --images、Chrome DevTools 真实抓图）
-- **图片检索规范**：`references/image_search_guidelines.md`
+- **工具链与插件协同**：`references/toolchain_integration.md`（原生 `search_web` 极速检索与防卡死规范）
 - **硬件命名规范**：`references/hardware_naming_standards.md`
 - **可信信源指引**：`references/trusted_data_sources.md`
-- **格式化脚本**：`scripts/format_specs.py`（支持自动排版白底图卡片、8列表格与去重卡片）
+- **格式化脚本**：`scripts/format_specs.py`（支持自动排版 8 列表格、上市时间表与去重录入卡片）
